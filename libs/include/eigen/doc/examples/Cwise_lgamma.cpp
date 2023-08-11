@@ -1,0 +1,10 @@
+#include <iostream>
+
+#include "../../Eigen/Core"
+#include "../../unsupported/Eigen/SpecialFunctions"
+using namespace Eigen;
+int main()
+{
+  Array4d v(0.5,10,0,-1);
+  std::cout << v.lgamma() << std::endl;
+}
