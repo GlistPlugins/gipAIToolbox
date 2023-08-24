@@ -1,7 +1,6 @@
+#include <Eigen/Core>
+#include <unsupported/Eigen/SpecialFunctions>
 #include <iostream>
-
-#include "../../Eigen/Core"
-#include "../../unsupported/Eigen/SpecialFunctions"
 using namespace Eigen;
 int main()
 {

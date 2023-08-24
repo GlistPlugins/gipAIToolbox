@@ -3,7 +3,7 @@
 
 #define EIGEN_SUPERLU_SUPPORT
 #define EIGEN_UMFPACK_SUPPORT
-#include "../Eigen/Sparse"
+#include <Eigen/Sparse>
 
 #define NOGMM
 #define NOMTL
@@ -40,7 +40,7 @@
 
 typedef Matrix<Scalar,Dynamic,1> VectorX;
 
-#include "../Eigen/LU"
+#include <Eigen/LU>
 
 template<int Backend>
 void doEigen(const char* name, const EigenSparseMatrix& sm1, const VectorX& b, VectorX& x, int flags = 0)

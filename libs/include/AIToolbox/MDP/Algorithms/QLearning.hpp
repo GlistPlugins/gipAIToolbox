@@ -70,7 +70,7 @@ namespace AIToolbox::MDP {
              * @param model The MDP model that QLearning will use as a base.
              * @param alpha The learning rate of the QLearning method.
              */
-            template <IsGenerativeModel M>
+            template <typename M, typename = std::enable_if_t<is_generative_model_v<M>>>
             QLearning(const M& model, double alpha = 0.1);
 
             /**
@@ -183,7 +183,7 @@ namespace AIToolbox::MDP {
             QFunction q_;
     };
 
-    template <IsGenerativeModel M>
+    template <typename M, typename>
     QLearning::QLearning(const M& model, const double alpha) :
             QLearning(model.getS(), model.getA(), model.getDiscount(), alpha) {}
 }

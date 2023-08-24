@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 using Eigen::DefaultDevice;
@@ -24,7 +25,8 @@ static void test_evals()
 
   Tensor<float, 2, DataLayout> result(2,3);
   result.setZero();
-  Eigen::array<Tensor<float, 2>::Index, 1> dims3{{0}};
+  Eigen::array<Tensor<float, 2>::Index, 1> dims3;
+  dims3[0] = 0;
 
   typedef TensorEvaluator<decltype(input.convolve(kernel, dims3)), DefaultDevice> Evaluator;
   Evaluator eval(input.convolve(kernel, dims3), DefaultDevice());
@@ -135,7 +137,7 @@ static void test_strides() {
                                input(12)*kernel(2)));
 }
 
-void test_cxx11_tensor_convolution()
+EIGEN_DECLARE_TEST(cxx11_tensor_convolution)
 {
   CALL_SUBTEST(test_evals<ColMajor>());
   CALL_SUBTEST(test_evals<RowMajor>());

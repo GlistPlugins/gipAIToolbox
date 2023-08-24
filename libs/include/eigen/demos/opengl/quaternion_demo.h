@@ -10,14 +10,14 @@
 #ifndef EIGEN_QUATERNION_DEMO_H
 #define EIGEN_QUATERNION_DEMO_H
 
+#include "gpuhelper.h"
+#include "camera.h"
+#include "trackball.h"
 #include <map>
 #include <QTimer>
 #include <QtGui/QApplication>
 #include <QtOpenGL/QGLWidget>
 #include <QtGui/QMainWindow>
-#include "camera.h"
-#include "gpuhelper.h"
-#include "trackball.h"
 
 class RenderingWidget : public QGLWidget
 {

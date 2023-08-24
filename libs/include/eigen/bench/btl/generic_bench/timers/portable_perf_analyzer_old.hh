@@ -20,8 +20,8 @@
 #ifndef _PORTABLE_PERF_ANALYZER_HH
 #define _PORTABLE_PERF_ANALYZER_HH
 
-#include "../utils/utilities.h"
-#include "portable_timer.hh"
+#include "utilities.h"
+#include "timers/portable_timer.hh"
 
 template <class Action>
 class Portable_Perf_Analyzer{

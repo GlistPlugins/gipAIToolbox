@@ -9,7 +9,7 @@
 
 namespace AIToolbox::Bandit {
     /**
-     * @brief This class implements a Thompson sampling policy.
+     * @brief This class models a Thompson sampling policy.
      *
      * This class uses the Student-t distribution to model normally-distributed
      * rewards with unknown mean and variance. As more experience is gained,
@@ -62,13 +62,6 @@ namespace AIToolbox::Bandit {
              * do call this method.
              */
             virtual Vector getPolicy() const override;
-
-            /**
-             * @brief This function returns a reference to the underlying Experience we use.
-             *
-             * @return The internal Experience reference.
-             */
-            const Experience & getExperience() const;
 
         private:
             const Experience & exp_;

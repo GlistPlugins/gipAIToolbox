@@ -7,11 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/BVH"
-
-#include "../../Eigen/Geometry"
-#include "../../Eigen/StdVector"
-#include "../../test/main.h"
+#include "main.h"
+#include <Eigen/StdVector>
+#include <Eigen/Geometry>
+#include <unsupported/Eigen/BVH>
 
 namespace Eigen {
 
@@ -193,7 +192,7 @@ struct TreeTest
 };
 
 
-void test_BVH()
+EIGEN_DECLARE_TEST(BVH)
 {
   for(int i = 0; i < g_repeat; i++) {
 #ifdef EIGEN_TEST_PART_1

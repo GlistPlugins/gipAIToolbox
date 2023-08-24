@@ -1,6 +1,6 @@
+#include <Eigen/Sparse>
 #include <vector>
 #include <QImage>
-#include "../../Eigen/Sparse"
 
 typedef Eigen::SparseMatrix<double> SpMat; // declares a column-major sparse matrix type of double
 typedef Eigen::Triplet<double> T;

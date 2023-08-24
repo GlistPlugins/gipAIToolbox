@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../Eigen/Core"
+#include <Eigen/Core>
 
 #ifndef MATSIZE
 #define MATSIZE 3

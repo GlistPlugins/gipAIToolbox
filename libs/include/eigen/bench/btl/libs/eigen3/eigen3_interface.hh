@@ -18,10 +18,9 @@
 #ifndef EIGEN3_INTERFACE_HH
 #define EIGEN3_INTERFACE_HH
 
+#include <Eigen/Eigen>
 #include <vector>
-
-#include "../../../../Eigen/Eigen"
-#include "../../generic_bench/btl.hh"
+#include "btl.hh"
 
 using namespace Eigen;
 
@@ -93,9 +92,11 @@ public :
     X.noalias() = A.transpose()*B.transpose();
   }
 
-//   static inline void ata_product(const gene_matrix & A, gene_matrix & X, int  /*N*/){
-//     X.noalias() = A.transpose()*A;
-//   }
+  static inline void ata_product(const gene_matrix & A, gene_matrix & X, int  /*N*/){
+    //X.noalias() = A.transpose()*A;
+    X.template triangularView<Lower>().setZero();
+    X.template selfadjointView<Lower>().rankUpdate(A.transpose());
+  }
 
   static inline void aat_product(const gene_matrix & A, gene_matrix & X, int  /*N*/){
     X.template triangularView<Lower>().setZero();

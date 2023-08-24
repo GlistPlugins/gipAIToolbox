@@ -1,13 +1,12 @@
 #ifndef AI_TOOLBOX_FACTORED_MDP_COOPERATIVE_PRIORITIZED_SWEEPING_HEADER_FILE
 #define AI_TOOLBOX_FACTORED_MDP_COOPERATIVE_PRIORITIZED_SWEEPING_HEADER_FILE
 
-#include <AIToolbox/Seeder.hpp>
+#include <AIToolbox/Factored/MDP/Types.hpp>
 #include <AIToolbox/Factored/Utils/Core.hpp>
 #include <AIToolbox/Factored/Utils/FactoredMatrix.hpp>
 #include <AIToolbox/Factored/Utils/FasterTrie.hpp>
-#include <AIToolbox/Factored/MDP/Types.hpp>
-#include <AIToolbox/Factored/MDP/Utils.hpp>
 #include <AIToolbox/Factored/MDP/Policies/QGreedyPolicy.hpp>
+#include <AIToolbox/Impl/Seeder.hpp>
 #include <AIToolbox/Factored/MDP/Algorithms/Utils/CPSQueue.hpp>
 
 namespace AIToolbox::Factored::MDP {
@@ -29,7 +28,7 @@ namespace AIToolbox::Factored::MDP {
      *
      * @tparam M The type of the model to sample from.
      */
-    template <typename M, typename Maximizer = Bandit::VariableElimination>
+    template <typename M>
     class CooperativePrioritizedSweeping {
         public:
             /**
@@ -63,23 +62,9 @@ namespace AIToolbox::Factored::MDP {
             void batchUpdateQ(const unsigned N = 50);
 
             /**
-             * @brief This function returns the QGreedyPolicy we use to determine a1* in the updates.
-             *
-             * This function is useful to set the parameters of the Maximizer
-             * used by the policy, or even to use it to sample actions greedily
-             * from the QFunction without necessarily constructing another policy.
-             */
-            QGreedyPolicy<Maximizer> & getInternalQGreedyPolicy();
-
-            /**
-             * @brief This function returns the QGreedyPolicy we use to determine a1* in the updates.
-             */
-            const QGreedyPolicy<Maximizer> & getInternalQGreedyPolicy() const;
-
-            /**
              * @brief This function returns a reference to the internal QFunction.
              */
-            const QFunction & getQFunction() const;
+            const FactoredMatrix2D & getQFunction() const;
 
             /**
              * @brief This function sets the QFunction to a set value.
@@ -114,25 +99,24 @@ namespace AIToolbox::Factored::MDP {
             std::vector<std::vector<size_t>> qDomains_;
             Vector rewardWeights_, deltaStorage_, rewardStorage_;
 
-            QFunction q_;
-            QGreedyPolicy<Maximizer> gp_;
+            FactoredMatrix2D q_;
+            QGreedyPolicy gp_;
             CPSQueue queue_;
 
             mutable RandomEngine rand_;
     };
 
-    template <typename M, typename Maximizer>
-    CooperativePrioritizedSweeping<M, Maximizer>::CooperativePrioritizedSweeping(const M & m, std::vector<std::vector<size_t>> basisDomains, double alpha, double theta) :
+    template <typename M>
+    CooperativePrioritizedSweeping<M>::CooperativePrioritizedSweeping(const M & m, std::vector<std::vector<size_t>> basisDomains, double alpha, double theta) :
             model_(m),
             alpha_(alpha), theta_(theta),
             qDomains_(std::move(basisDomains)),
             rewardWeights_(model_.getS().size()),
             deltaStorage_(model_.getS().size()),
             rewardStorage_(model_.getS().size()),
-            q_(makeQFunction(model_.getGraph(), qDomains_)),
             gp_(model_.getS(), model_.getA(), q_),
             queue_(model_.getGraph()),
-            rand_(Seeder::getSeed())
+            rand_(Impl::Seeder::getSeed())
     {
         // We weight the rewards so that they are split correctly between the
         // components of the QFunction.
@@ -143,20 +127,40 @@ namespace AIToolbox::Factored::MDP {
         deltaStorage_.setZero();
         // We don't need to zero rewardStorage_
 
-        // We weight rewards based on the state features of each Q factor
-        for (const auto & q : q_.bases)
+        const auto & nodes = model_.getGraph().getNodes();
+
+        q_.bases.reserve(qDomains_.size());
+        for (const auto & domain : qDomains_) {
+            q_.bases.emplace_back();
+            auto & q = q_.bases.back();
+
+            for (const auto d : domain) {
+                // Compute state-action domain for this Q factor.
+                q.actionTag = merge(q.actionTag, nodes[d].agents);
+                for (const auto & n : nodes[d].parents)
+                    q.tag = merge(q.tag, n);
+            }
+            // We weight rewards based on the state features of each Q factor
             for (const auto d : q.tag)
                 rewardWeights_[d] += 1.0;
+
+            // Initialize this factor's matrix.
+            const size_t sizeA = factorSpacePartial(q.actionTag, model_.getA());
+            const size_t sizeS = factorSpacePartial(q.tag, model_.getS());
+
+            q.values.resize(sizeS, sizeA);
+            q.values.setZero();
+        }
     }
 
-    template <typename M, typename Maximizer>
-    void CooperativePrioritizedSweeping<M, Maximizer>::stepUpdateQ(const State & s, const Action & a, const State & s1, const Rewards & r) {
+    template <typename M>
+    void CooperativePrioritizedSweeping<M>::stepUpdateQ(const State & s, const Action & a, const State & s1, const Rewards & r) {
         updateQ(s, a, s1, r);
         addToQueue(s);
     }
 
-    template <typename M, typename Maximizer>
-    void CooperativePrioritizedSweeping<M, Maximizer>::batchUpdateQ(const unsigned N) {
+    template <typename M>
+    void CooperativePrioritizedSweeping<M>::batchUpdateQ(const unsigned N) {
         // Initialize some variables to avoid reallocations
         State s(model_.getS().size());
         State s1(model_.getS().size());
@@ -193,8 +197,8 @@ namespace AIToolbox::Factored::MDP {
         }
     }
 
-    template <typename M, typename Maximizer>
-    void CooperativePrioritizedSweeping<M, Maximizer>::updateQ(const State & s, const Action & a, const State & s1, const Rewards & r) {
+    template <typename M>
+    void CooperativePrioritizedSweeping<M>::updateQ(const State & s, const Action & a, const State & s1, const Rewards & r) {
         // Compute optimal action to do Q-Learning update.
         const auto a1 = gp_.sampleAction(s1);
 
@@ -255,8 +259,8 @@ namespace AIToolbox::Factored::MDP {
         }
     }
 
-    template <typename M, typename Maximizer>
-    void CooperativePrioritizedSweeping<M, Maximizer>::addToQueue(const State & s1) {
+    template <typename M>
+    void CooperativePrioritizedSweeping<M>::addToQueue(const State & s1) {
         // Note that s1 was s before, but here we consider it as the
         // "future" state as we look for its parents.
         const auto & T = model_.getTransitionFunction();
@@ -287,32 +291,15 @@ namespace AIToolbox::Factored::MDP {
         }
     }
 
-    template <typename M, typename Maximizer>
-    void CooperativePrioritizedSweeping<M, Maximizer>::setQFunction(const double val) {
+    template <typename M>
+    void CooperativePrioritizedSweeping<M>::setQFunction(const double val) {
         for (auto & q : q_.bases)
             q.values.fill(val);
-
-        // Add some noise to avoid non-unique maximum with MaxPlus since it cannot handle them.
-        if constexpr(std::is_same_v<Maximizer, Bandit::MaxPlus>) {
-            std::uniform_real_distribution<double> dist(-0.01 * val, 0.01 * val);
-            for (auto & q : q_.bases)
-                q.values += Matrix2D::NullaryExpr(q.values.rows(), q.values.cols(), [&](){return dist(rand_);});
-        }
     }
 
-    template <typename M, typename Maximizer>
-    const QFunction & CooperativePrioritizedSweeping<M, Maximizer>::getQFunction() const {
+    template <typename M>
+    const FactoredMatrix2D & CooperativePrioritizedSweeping<M>::getQFunction() const {
         return q_;
-    }
-
-    template <typename M, typename Maximizer>
-    QGreedyPolicy<Maximizer> & CooperativePrioritizedSweeping<M, Maximizer>::getInternalQGreedyPolicy() {
-        return gp_;
-    }
-
-    template <typename M, typename Maximizer>
-    const QGreedyPolicy<Maximizer> & CooperativePrioritizedSweeping<M, Maximizer>::getInternalQGreedyPolicy() const {
-        return gp_;
     }
 }
 

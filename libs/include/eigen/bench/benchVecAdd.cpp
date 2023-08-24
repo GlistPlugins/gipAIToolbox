@@ -1,8 +1,7 @@
 
 #include <iostream>
-
-#include "../Eigen/Core"
-#include "BenchTimer.h"
+#include <Eigen/Core>
+#include <bench/BenchTimer.h>
 using namespace Eigen;
 
 #ifndef SIZE

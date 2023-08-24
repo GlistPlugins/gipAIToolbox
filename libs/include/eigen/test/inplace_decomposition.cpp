@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Cholesky"
-#include "../Eigen/LU"
-#include "../Eigen/QR"
 #include "main.h"
+#include <Eigen/LU>
+#include <Eigen/Cholesky>
+#include <Eigen/QR>
 
 // This file test inplace decomposition through Ref<>, as supported by Cholesky, LU, and QR decompositions.
 
@@ -79,7 +79,7 @@ template<typename DecType,typename MatrixType> void inplace(bool square = false,
 }
 
 
-void test_inplace_decomposition()
+EIGEN_DECLARE_TEST(inplace_decomposition)
 {
   EIGEN_UNUSED typedef Matrix<double,4,3> Matrix43d;
   for(int i = 0; i < g_repeat; i++) {

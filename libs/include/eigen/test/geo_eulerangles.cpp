@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Geometry"
-#include "../Eigen/LU"
-#include "../Eigen/SVD"
 #include "main.h"
+#include <Eigen/Geometry>
+#include <Eigen/LU>
+#include <Eigen/SVD>
 
 
 template<typename Scalar>
@@ -103,7 +103,7 @@ template<typename Scalar> void eulerangles()
   check_all_var(ea);
 }
 
-void test_geo_eulerangles()
+EIGEN_DECLARE_TEST(geo_eulerangles)
 {
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST_1( eulerangles<float>() );

@@ -19,14 +19,13 @@
 //
 #ifndef ACTION_MATRIX_MATRIX_PRODUCT_BIS
 #define ACTION_MATRIX_MATRIX_PRODUCT_BIS
+#include "utilities.h"
+#include "STL_interface.hh"
+#include "STL_timer.hh"
 #include <string>
-
-#include "../generic_bench/init/init_function.hh"
-#include "../generic_bench/init/init_matrix.hh"
-#include "../generic_bench/init/init_vector.hh"
-#include "../generic_bench/timers/STL_timer.hh"
-#include "../generic_bench/utils/utilities.h"
-#include "../libs/STL/STL_interface.hh"
+#include "init_function.hh"
+#include "init_vector.hh"
+#include "init_matrix.hh"
 
 using namespace std;
 

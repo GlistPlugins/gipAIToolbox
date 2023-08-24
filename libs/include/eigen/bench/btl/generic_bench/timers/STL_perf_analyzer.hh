@@ -20,8 +20,8 @@
 #ifndef _STL_PERF_ANALYSER_HH
 #define _STL_PERF_ANALYSER_HH
 
-#include "../bench_parameter.hh"
 #include "STL_timer.hh"
+#include "bench_parameter.hh"
 
 template<class ACTION>
 class STL_Perf_Analyzer{

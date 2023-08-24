@@ -12,8 +12,8 @@
 
 #include "main.h"
 #include <QtCore/QVector>
-#include "../Eigen/Geometry"
-#include "../Eigen/QtAlignedMalloc"
+#include <Eigen/Geometry>
+#include <Eigen/QtAlignedMalloc>
 
 template<typename MatrixType>
 void check_qtvector_matrix(const MatrixType& m)
@@ -125,7 +125,7 @@ void check_qtvector_quaternion(const QuaternionType&)
   }
 }
 
-void test_qtvector()
+EIGEN_DECLARE_TEST(qtvector)
 {
   // some non vectorizable fixed sizes
   CALL_SUBTEST(check_qtvector_matrix(Vector2f()));

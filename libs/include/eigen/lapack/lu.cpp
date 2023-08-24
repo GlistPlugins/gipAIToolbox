@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../blas/common.h"
-#include "../Eigen/LU"
+#include "common.h"
+#include <Eigen/LU>
 
 // computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges
 EIGEN_LAPACK_FUNC(getrf,(int *m, int *n, RealScalar *pa, int *lda, int *ipiv, int *info))

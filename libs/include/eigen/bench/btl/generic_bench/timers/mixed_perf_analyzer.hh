@@ -20,8 +20,8 @@
 #ifndef _MIXED_PERF_ANALYSER_HH
 #define _MIXED_PERF_ANALYSER_HH
 
-#include "portable_perf_analyzer.hh"
 #include "x86_perf_analyzer.hh"
+#include "portable_perf_analyzer.hh"
 
 // choose portable perf analyzer for long calculations and x86 analyser for short ones
 

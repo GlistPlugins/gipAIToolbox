@@ -4,7 +4,7 @@
 #include <utility>
 #include <random>
 
-#include <AIToolbox/Seeder.hpp>
+#include <AIToolbox/Impl/Seeder.hpp>
 #include <AIToolbox/Types.hpp>
 #include <AIToolbox/MDP/Types.hpp>
 #include <AIToolbox/MDP/TypeTraits.hpp>
@@ -121,7 +121,7 @@ namespace AIToolbox::MDP {
              * @param r The external rewards container.
              * @param d The discount factor for the MDP.
              */
-            template <IsNaive3DMatrix T, IsNaive3DMatrix R>
+            template <typename T, typename R>
             Model(size_t s, size_t a, const T & t, const R & r, double d = 1.0);
 
             /**
@@ -136,7 +136,7 @@ namespace AIToolbox::MDP {
              * @tparam M The type of the other model.
              * @param model The model that needs to be copied.
              */
-            template <IsModel M>
+            template <typename M, typename = std::enable_if_t<is_model_v<M>>>
             Model(const M& model);
 
             /**
@@ -166,7 +166,7 @@ namespace AIToolbox::MDP {
              *
              * The container needs to support data access through
              * operator[]. In addition, the dimensions of the container
-             * must match the ones used during construction (for three
+             * must match the ones provided as arguments (for three
              * dimensions: S,A,S).
              *
              * This is important, as this function DOES NOT perform any
@@ -178,19 +178,19 @@ namespace AIToolbox::MDP {
              * @tparam T The external transition container type.
              * @param t The external transitions container.
              */
-            template <IsNaive3DMatrix T>
+            template <typename T>
             void setTransitionFunction(const T & t);
 
             /**
-             * @brief This function sets the transition function using a Eigen dense matrix.
+             * @brief This function sets the transition function using a Eigen dense matrices.
              *
-             * This function will throw an std::invalid_argument if the
+             * This function will throw a std::invalid_argument if the
              * matrix provided does not contain valid probabilities.
              *
-             * The dimensions of the container must match the ones used during
-             * construction (for three dimensions: A, S, S).
-             * BE CAREFUL. The matrices MUST be SxS, while the std::vector
-             * containing them MUST be of size A.
+             * The dimensions of the container must match the ones provided
+             * as arguments (for three dimensions: S, S, A). BE CAREFUL.
+             * The sparse matrices MUST be SxS, while the std::vector
+             * containing them MUST represent A.
              *
              * This function does DOES NOT perform any size checks on the
              * input.
@@ -204,8 +204,8 @@ namespace AIToolbox::MDP {
              *
              * The container needs to support data access through
              * operator[]. In addition, the dimensions of the containers
-             * must match the ones used during construction (for three
-             * dimensions: S, A, S).
+             * must match the ones provided as arguments (for three
+             * dimensions: S,A,S).
              *
              * This is important, as this function DOES NOT perform any
              * size checks on the external containers.
@@ -216,15 +216,14 @@ namespace AIToolbox::MDP {
              * @tparam R The external rewards container type.
              * @param r The external rewards container.
              */
-            template <IsNaive3DMatrix R>
+            template <typename R>
             void setRewardFunction(const R & r);
 
             /**
              * @brief This function replaces the reward function with the one provided.
              *
-             * The dimensions of the container must match the ones used during
-             * construction(for two dimensions: S, A).
-             * BE CAREFUL.
+             * The dimensions of the container must match the ones provided
+             * as arguments (for three dimensions: S, A). BE CAREFUL.
              *
              * This function does DOES NOT perform any size checks on the
              * input.
@@ -343,22 +342,24 @@ namespace AIToolbox::MDP {
             RewardMatrix rewards_;
 
             mutable RandomEngine rand_;
+
+            friend std::istream& operator>>(std::istream &is, Model &);
     };
 
-    template <IsNaive3DMatrix T, IsNaive3DMatrix R>
+    template <typename T, typename R>
     Model::Model(const size_t s, const size_t a, const T & t, const R & r, const double d) :
             S(s), A(a), transitions_(A, Matrix2D(S, S)),
-            rewards_(S, A), rand_(Seeder::getSeed())
+            rewards_(S, A), rand_(Impl::Seeder::getSeed())
     {
         setDiscount(d);
         setTransitionFunction(t);
         setRewardFunction(r);
     }
 
-    template <IsModel M>
+    template <typename M, typename>
     Model::Model(const M& model) :
             S(model.getS()), A(model.getA()), transitions_(A, Matrix2D(S, S)),
-            rewards_(S, A), rand_(Seeder::getSeed())
+            rewards_(S, A), rand_(Impl::Seeder::getSeed())
     {
         setDiscount(model.getDiscount());
         rewards_.setZero();
@@ -373,10 +374,13 @@ namespace AIToolbox::MDP {
             }
     }
 
-    template <IsNaive3DMatrix T>
+    template <typename T>
     void Model::setTransitionFunction(const T & t) {
-        if (!isProbability(S, A, S, t))
-            throw std::invalid_argument("Input transition matrix does not contain valid probabilities.");
+        // First we check, then we set if it is good.
+        for ( size_t s = 0; s < S; ++s )
+            for ( size_t a = 0; a < A; ++a )
+                if ( !isProbability(S, t[s][a]) )
+                    throw std::invalid_argument("Input transition matrix does not contain valid probabilities.");
 
         for ( size_t s = 0; s < S; ++s )
             for ( size_t a = 0; a < A; ++a )
@@ -384,7 +388,7 @@ namespace AIToolbox::MDP {
                     transitions_[a](s, s1) = t[s][a][s1];
     }
 
-    template <IsNaive3DMatrix R>
+    template <typename R>
     void Model::setRewardFunction(const R & r) {
         rewards_.setZero();
         for ( size_t s = 0; s < S; ++s )

@@ -7,9 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../Eigen/Core"
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/Core>
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::MatrixXf;
 using Eigen::Tensor;
@@ -60,7 +61,7 @@ static void test_const()
   Eigen::array<int, 2> bcast;
   bcast[0] = 3;
   bcast[1] = 1;
-  const TensorMap<Tensor<const float, 2> > input_tensor(input.data(), 3, 3);
+  const TensorMap<const Tensor<float, 2> > input_tensor(input.data(), 3, 3);
   Tensor<float, 2> output_tensor= (input_tensor - input_tensor.maximum(depth_dim).eval().reshape(dims2d).broadcast(bcast));
 
   for (int i = 0; i < 3; ++i) {
@@ -71,7 +72,7 @@ static void test_const()
 }
 
 
-void test_cxx11_tensor_forced_eval()
+EIGEN_DECLARE_TEST(cxx11_tensor_forced_eval)
 {
   CALL_SUBTEST(test_simple());
   CALL_SUBTEST(test_const());

@@ -17,15 +17,15 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-#include "action_cholesky.hh"
-#include "../../actions/action_cholesky.hh"
-#include "../../actions/action_lu_decomp.hh"
-#include "../../actions/action_partial_lu.hh"
-#include "../../actions/action_trisolve_matrix.hh"
-#include "../../actions/basic_actions.hh"
-#include "../../generic_bench/bench.hh"
-#include "../../generic_bench/utils/utilities.h"
+#include "utilities.h"
 #include "blas_interface.hh"
+#include "bench.hh"
+#include "basic_actions.hh"
+
+#include "action_cholesky.hh"
+#include "action_lu_decomp.hh"
+#include "action_partial_lu.hh"
+#include "action_trisolve_matrix.hh"
 
 #ifdef HAS_LAPACK
 #include "action_hessenberg.hh"
@@ -48,7 +48,7 @@ int main()
   bench<Action_rot<blas_interface<REAL_TYPE> > >(MIN_AXPY,MAX_AXPY,NB_POINT);
 
   bench<Action_matrix_matrix_product<blas_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
-//   bench<Action_ata_product<blas_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
+  bench<Action_ata_product<blas_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
   bench<Action_aat_product<blas_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
 
   bench<Action_trisolve<blas_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);

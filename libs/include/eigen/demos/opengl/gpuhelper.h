@@ -10,9 +10,9 @@
 #ifndef EIGEN_GPUHELPER_H
 #define EIGEN_GPUHELPER_H
 
+#include <Eigen/Geometry>
 #include <GL/gl.h>
 #include <vector>
-#include "../../Eigen/Geometry"
 
 using namespace Eigen;
 

@@ -2,12 +2,13 @@
 #define AI_TOOLBOX_TYPES_HEADER_FILE
 
 #include <vector>
+#include <unordered_map>
 #include <random>
 
 #include <boost/multi_array.hpp>
 
-#include "../eigen/Eigen/Core"
-#include "../eigen/Eigen/SparseCore"
+#include <Eigen/Core>
+#include <Eigen/SparseCore>
 
 namespace AIToolbox {
     // This should have decent properties.

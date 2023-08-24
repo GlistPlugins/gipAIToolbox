@@ -8,6 +8,11 @@
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #include "quaternion_demo.h"
+#include "icosphere.h"
+
+#include <Eigen/Geometry>
+#include <Eigen/QR>
+#include <Eigen/LU>
 
 #include <iostream>
 #include <QEvent>
@@ -19,10 +24,6 @@
 #include <QDockWidget>
 #include <QPushButton>
 #include <QGroupBox>
-#include "../../Eigen/Geometry"
-#include "../../Eigen/LU"
-#include "../../Eigen/QR"
-#include "icosphere.h"
 
 using namespace Eigen;
 

@@ -7,15 +7,15 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Geometry"
-#include "../Eigen/StdVector"
 #include "main.h"
+#include <Eigen/StdVector>
+#include <Eigen/Geometry>
 
 template<typename MatrixType>
 void check_stdvector_matrix(const MatrixType& m)
 {
-  typename MatrixType::Index rows = m.rows();
-  typename MatrixType::Index cols = m.cols();
+  Index rows = m.rows();
+  Index cols = m.cols();
   MatrixType x = MatrixType::Random(rows,cols), y = MatrixType::Random(rows,cols);
   std::vector<MatrixType,Eigen::aligned_allocator<MatrixType> > v(10, MatrixType::Zero(rows,cols)), w(20, y);
   v[5] = x;
@@ -127,7 +127,7 @@ void std_vector_gcc_warning()
   v.push_back(T());
 }
 
-void test_stdvector()
+EIGEN_DECLARE_TEST(stdvector)
 {
   // some non vectorizable fixed sizes
   CALL_SUBTEST_1(check_stdvector_matrix(Vector2f()));

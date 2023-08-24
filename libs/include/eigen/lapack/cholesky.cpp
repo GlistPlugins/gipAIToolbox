@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Cholesky"
 #include "lapack_common.h"
+#include <Eigen/Cholesky>
 
 // POTRF computes the Cholesky factorization of a real symmetric positive definite matrix A.
 EIGEN_LAPACK_FUNC(potrf,(char* uplo, int *n, RealScalar *pa, int *lda, int *info))

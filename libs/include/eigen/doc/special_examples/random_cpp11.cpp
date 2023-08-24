@@ -1,6 +1,6 @@
+#include <Eigen/Core>
 #include <iostream>
 #include <random>
-#include "../../Eigen/Core"
 
 using namespace Eigen;
 

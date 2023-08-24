@@ -9,8 +9,8 @@
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 #define EIGEN_USE_THREADS
-#include "../../test/main.h"
-#include "../Eigen/CXX11/ThreadPool"
+#include "main.h"
+#include <Eigen/CXX11/ThreadPool>
 
 // Visual studio doesn't implement a rand_r() function since its
 // implementation of rand() is already thread safe
@@ -30,11 +30,11 @@ static void test_basic_eventcount()
   EventCount ec(waiters);
   EventCount::Waiter& w = waiters[0];
   ec.Notify(false);
-  ec.Prewait(&w);
+  ec.Prewait();
   ec.Notify(true);
   ec.CommitWait(&w);
-  ec.Prewait(&w);
-  ec.CancelWait(&w);
+  ec.Prewait();
+  ec.CancelWait();
 }
 
 // Fake bounded counter-based queue.
@@ -112,7 +112,7 @@ static void test_stress_eventcount()
         unsigned idx = rand_reentrant(&rnd) % kQueues;
         if (queues[idx].Pop()) continue;
         j--;
-        ec.Prewait(&w);
+        ec.Prewait();
         bool empty = true;
         for (int q = 0; q < kQueues; q++) {
           if (!queues[q].Empty()) {
@@ -121,7 +121,7 @@ static void test_stress_eventcount()
           }
         }
         if (!empty) {
-          ec.CancelWait(&w);
+          ec.CancelWait();
           continue;
         }
         ec.CommitWait(&w);
@@ -135,7 +135,7 @@ static void test_stress_eventcount()
   }
 }
 
-void test_cxx11_eventcount()
+EIGEN_DECLARE_TEST(cxx11_eventcount)
 {
   CALL_SUBTEST(test_basic_eventcount());
   CALL_SUBTEST(test_stress_eventcount());

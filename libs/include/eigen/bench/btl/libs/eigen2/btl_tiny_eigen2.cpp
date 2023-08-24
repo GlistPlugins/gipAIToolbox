@@ -15,18 +15,18 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-#include "../../actions/action_aat_product.hh"
-#include "../../actions/action_ata_product.hh"
-#include "../../actions/action_atv_product.hh"
-#include "../../actions/action_axpy.hh"
-#include "../../actions/action_cholesky.hh"
-#include "../../actions/action_lu_solve.hh"
-#include "../../actions/action_matrix_matrix_product.hh"
-#include "../../actions/action_matrix_vector_product.hh"
-#include "../../actions/action_trisolve.hh"
-#include "../../generic_bench/static/bench_static.hh"
-#include "../../generic_bench/utils/utilities.h"
-#include "../eigen3/eigen3_interface.hh"
+#include "utilities.h"
+#include "eigen3_interface.hh"
+#include "static/bench_static.hh"
+#include "action_matrix_vector_product.hh"
+#include "action_matrix_matrix_product.hh"
+#include "action_axpy.hh"
+#include "action_lu_solve.hh"
+#include "action_ata_product.hh"
+#include "action_aat_product.hh"
+#include "action_atv_product.hh"
+#include "action_cholesky.hh"
+#include "action_trisolve.hh"
 
 BTL_MAIN;
 

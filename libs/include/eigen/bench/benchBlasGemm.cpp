@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-#include "../Eigen/Core"
+#include <Eigen/Core>
 #include "BenchTimer.h"
 
 // include the BLAS headers

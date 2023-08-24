@@ -2,7 +2,7 @@
 #define AI_TOOLBOX_BANDIT_MODEL_HEADER_FILE
 
 #include <AIToolbox/Types.hpp>
-#include <AIToolbox/Seeder.hpp>
+#include <AIToolbox/Impl/Seeder.hpp>
 
 namespace AIToolbox::Bandit {
     /**
@@ -61,7 +61,7 @@ namespace AIToolbox::Bandit {
              *
              * @return A return sampled from the arm's underlying distribution.
              */
-            decltype(auto) sampleR(size_t a) const;
+            double sampleR(size_t a) const;
 
             /**
              * @brief This function returns the number of arms of the bandit.
@@ -85,13 +85,13 @@ namespace AIToolbox::Bandit {
     template <typename Dist>
     template <typename... TupleArgs>
     Model<Dist>::Model(TupleArgs... tupleArgs) :
-        arms_({std::make_from_tuple<Dist>(std::move(tupleArgs))...}), rand_(AIToolbox::Seeder::getSeed())
+        arms_({std::make_from_tuple<Dist>(std::move(tupleArgs))...}), rand_(AIToolbox::Impl::Seeder::getSeed())
     {}
 
     template <typename Dist>
     template <typename... Args>
     Model<Dist>::Model(std::vector<std::tuple<Args...>> args) :
-        rand_(AIToolbox::Seeder::getSeed())
+        rand_(AIToolbox::Impl::Seeder::getSeed())
     {
         arms_.reserve(args.size());
 
@@ -102,7 +102,7 @@ namespace AIToolbox::Bandit {
     }
 
     template <typename Dist>
-    decltype(auto) Model<Dist>::sampleR(const size_t a) const {
+    double Model<Dist>::sampleR(const size_t a) const {
         return arms_[a](rand_);
     }
 

@@ -12,7 +12,7 @@
 #ifndef EIGEN_COMPLEX_SCHUR_H
 #define EIGEN_COMPLEX_SCHUR_H
 
-#include "HessenbergDecomposition.h"
+#include "./HessenbergDecomposition.h"
 
 namespace Eigen { 
 
@@ -212,7 +212,7 @@ template<typename _MatrixType> class ComplexSchur
 
     /** \brief Reports whether previous computation was successful.
       *
-      * \returns \c Success if computation was succesful, \c NoConvergence otherwise.
+      * \returns \c Success if computation was successful, \c NoConvergence otherwise.
       */
     ComputationInfo info() const
     {

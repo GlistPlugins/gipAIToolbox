@@ -3,11 +3,11 @@
 
 #include <cmath>
 #include <limits>
-#include <compare>
 
 #include <AIToolbox/Types.hpp>
 
 #include <boost/functional/hash.hpp>
+
 
 namespace AIToolbox {
     /// This is the max absolute difference for which two values can be considered equal.
@@ -152,17 +152,16 @@ namespace AIToolbox {
      * @param lhs The left hand size of the comparison.
      * @param rhs The right hand size of the comparison.
      *
-     * @return The strong_ordering of the input vectors.
+     * @return 1 if the lhs is greater than the rhs, 0 if they are equal, -1 otherwise.
      */
     template <typename V>
-    std::strong_ordering veccmp(const V & lhs, const V & rhs) {
+    int veccmp(const V & lhs, const V & rhs) {
         assert(lhs.size() == rhs.size());
         for (decltype(lhs.size()) i = 0; i < lhs.size(); ++i) {
-            // We can't use spaceship here to support floating points.
-            if (lhs[i] == rhs[i]) continue;
-            return lhs[i] > rhs[i] ? std::strong_ordering::greater : std::strong_ordering::less;
+            if (lhs[i] > rhs[i]) return 1;
+            if (lhs[i] < rhs[i]) return -1;
         }
-        return std::strong_ordering::equal;
+        return 0;
     }
 
     /**
@@ -176,16 +175,16 @@ namespace AIToolbox {
      * @param lhs The left hand size of the comparison.
      * @param rhs The right hand size of the comparison.
      *
-     * @return The strong_ordering of the input vectors.
+     * @return 1 if the lhs is greater than the rhs, 0 if they are equal, -1 otherwise.
      */
     template <typename V>
-    std::partial_ordering veccmpSmall(const V & lhs, const V & rhs) {
+    int veccmpSmall(const V & lhs, const V & rhs) {
         assert(lhs.size() == rhs.size());
         for (decltype(lhs.size()) i = 0; i < lhs.size(); ++i) {
             if (checkEqualSmall(lhs[i], rhs[i])) continue;
-            return lhs[i] <=> rhs[i];
+            return lhs[i] > rhs[i] ? 1 : -1;
         }
-        return std::partial_ordering::equivalent;
+        return 0;
     }
 
     /**
@@ -199,16 +198,16 @@ namespace AIToolbox {
      * @param lhs The left hand size of the comparison.
      * @param rhs The right hand size of the comparison.
      *
-     * @return The strong_ordering of the input vectors.
+     * @return 1 if the lhs is greater than the rhs, 0 if they are equal, -1 otherwise.
      */
     template <typename V>
-    std::partial_ordering veccmpGeneral(const V & lhs, const V & rhs) {
+    int veccmpGeneral(const V & lhs, const V & rhs) {
         assert(lhs.size() == rhs.size());
         for (decltype(lhs.size()) i = 0; i < lhs.size(); ++i) {
             if (checkEqualGeneral(lhs[i], rhs[i])) continue;
-            return lhs[i] <=> rhs[i];
+            return lhs[i] > rhs[i] ? 1 : -1;
         }
-        return std::partial_ordering::equivalent;
+        return 0;
     }
 
     /**

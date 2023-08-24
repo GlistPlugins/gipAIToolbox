@@ -1,10 +1,7 @@
 #ifndef AI_TOOLBOX_UTILS_COMBINATORICS_HEADER_FILE
 #define AI_TOOLBOX_UTILS_COMBINATORICS_HEADER_FILE
 
-#include <cstddef>
-#include <vector>
-#include <numeric>
-#include <cassert>
+#include <AIToolbox/Utils/IndexMap.hpp>
 
 namespace AIToolbox {
     /**
@@ -65,16 +62,15 @@ namespace AIToolbox {
              * @brief Default constructor.
              *
              * @param elementsN The number of elements that the subset should have (<= limit);
-             * @param lowerBound Either an integer, or an iterator to the start of a range containing the elements to subset.
-             * @param upperBound Either an integer (excluded), or an iterator to the end of a range containing the elements to subset.
+             * @param limit The upper bound for each element in the subset (excluded).
              */
             SubsetEnumerator(size_t elementsN, Index lowerBound, Index upperBound) :
                     lowerBound_(lowerBound), upperBound_(upperBound), ids_(elementsN)
             {
-                if constexpr (std::is_integral_v<Index>) {
-                    assert(upperBound_ > lowerBound_);
+                assert(elementsN >= 0);
+                if constexpr (std::is_integral_v<Index>)
                     assert(static_cast<size_t>(upperBound_ - lowerBound_) >= elementsN);
-                } else
+                else
                     assert(static_cast<size_t>(std::distance(lowerBound_, upperBound_)) >= elementsN);
                 reset();
             }

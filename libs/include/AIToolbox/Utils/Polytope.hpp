@@ -1,15 +1,11 @@
 #ifndef AI_TOOLBOX_UTILS_POLYTOPE_HEADER_FILE
 #define AI_TOOLBOX_UTILS_POLYTOPE_HEADER_FILE
 
-#include <array>
-#include <optional>
-
-#include <Eigen/Dense>
-
-#include <AIToolbox/TypeTraits.hpp>
 #include <AIToolbox/Utils/Core.hpp>
+#include <AIToolbox/Utils/TypeTraits.hpp>
 #include <AIToolbox/Utils/Combinatorics.hpp>
-#include <AIToolbox/Utils/IndexMap.hpp>
+#include <Eigen/Dense>
+#include <array>
 
 #include <AIToolbox/Utils/LP.hpp>
 
@@ -53,7 +49,7 @@ namespace AIToolbox {
      * Given a list of hyperplanes as a surface, this function returns the
      * hyperplane which provides the highest value at the specified point.
      *
-     * @param point The point where we need to check the value
+     * @param p The point where we need to check the value
      * @param begin The start of the range to look in.
      * @param end The end of the range to look in (excluded).
      * @param value A pointer to double, which gets set to the value of the given point with the found Hyperplane.
@@ -61,7 +57,7 @@ namespace AIToolbox {
      *
      * @return An iterator pointing to the best choice in range.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     Iterator findBestAtPoint(const Point & point, Iterator begin, Iterator end, double * value = nullptr, P p = P{}) {
         auto bestMatch = begin;
         double bestValue = point.dot(std::invoke(p, *bestMatch));
@@ -86,12 +82,11 @@ namespace AIToolbox {
      * @param corner The corner of the simplex space we are checking.
      * @param begin The start of the range to look in.
      * @param end The end of the range to look in (excluded).
-     * @param value A pointer to double, which gets set to the value of the corner with the found Hyperplane.
      * @param p A projection function to call on the iterators (defaults to identity).
      *
      * @return An iterator pointing to the best choice in range.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     Iterator findBestAtSimplexCorner(const size_t corner, Iterator begin, Iterator end, double * value = nullptr, P p = P{}) {
         auto bestMatch = begin;
         double bestValue = std::invoke(p, *bestMatch)[corner];
@@ -134,7 +129,7 @@ namespace AIToolbox {
      *
      * @return An iterator to the highest dominating entry, or if none is found, the end of the range.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     Iterator findBestDeltaDominated(const Point & point, const Hyperplane & plane, double delta, Iterator begin, Iterator end, P p = P{}) {
         auto retval = end;
 
@@ -161,11 +156,11 @@ namespace AIToolbox {
      *
      * This function uses an already existing bound containing previously
      * marked useful hyperplanes. The order is 'begin'->'bound'->'end', where
-     * 'bound' may be equal to 'begin' where no previous bound exists. The found
+     * bound may be equal to end where no previous bound exists. The found
      * hyperplane is moved between 'begin' and 'bound', but only if it was not
      * there previously.
      *
-     * @param point The point where we need to check the value
+     * @param p The point where we need to check the value
      * @param begin The begin of the search range.
      * @param bound The begin of the 'useful' range.
      * @param end The range end to be checked. It is NOT included in the search.
@@ -173,7 +168,7 @@ namespace AIToolbox {
      *
      * @return The new bound iterator.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     Iterator extractBestAtPoint(const Point & point, Iterator begin, Iterator bound, Iterator end, P p = P{}) {
         auto bestMatch = findBestAtPoint(point, begin, end, nullptr, p);
 
@@ -193,7 +188,7 @@ namespace AIToolbox {
      *
      * This function uses an already existing bound containing previously
      * marked useful hyperplanes. The order is 'begin'->'bound'->'end', where
-     * 'bound' may be equal to 'begin' where no previous bound exists. All found
+     * bound may be equal to end where no previous bound exists. All found
      * hyperplanes are added between 'begin' and 'bound', but only if they were
      * not there previously.
      *
@@ -205,7 +200,7 @@ namespace AIToolbox {
      *
      * @return The new bound iterator.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     Iterator extractBestAtSimplexCorners(const size_t S, Iterator begin, Iterator bound, Iterator end, P p = P{}) {
         if ( end == bound ) return bound;
 
@@ -244,7 +239,7 @@ namespace AIToolbox {
      *
      * @return An iterator pointing to the first non-useful Point.
      */
-    template <typename PIterator, typename VIterator, typename P = std::identity>
+    template <typename PIterator, typename VIterator, typename P = identity>
     PIterator extractBestUsefulPoints(PIterator pbegin, PIterator pend, VIterator begin, VIterator end, P p = P{}) {
         const auto pointsN  = std::distance(pbegin, pend);
         const auto entriesN = std::distance(begin, end);
@@ -336,7 +331,7 @@ namespace AIToolbox {
      *
      * @return A non-unique list of all the vertices found.
      */
-    template <typename NewIt, typename OldIt, typename P1 = std::identity, typename P2 = std::identity>
+    template <typename NewIt, typename OldIt, typename P1 = identity, typename P2 = identity>
     PointSurface findVerticesNaive(NewIt beginNew, NewIt endNew, OldIt alphasBegin, OldIt alphasEnd, P1 p1 = P1{}, P2 p2 = P2{}) {
         PointSurface vertices;
 
@@ -347,7 +342,7 @@ namespace AIToolbox {
         // This enumerator allows us to compute all possible subsets of S-1
         // elements. We use it on both the alphas, and the boundaries, thus the
         // number of elements we iterate over is alphasSize + S.
-        SubsetEnumerator enumerator(S - 1, 0ul, alphasSize + S);
+        SubsetEnumerator<Eigen::Index> enumerator(S - 1, 0ul, alphasSize + S);
 
         // This is the matrix on the left side of Ax = b (where A is m)
         Matrix2D m(S + 1, S + 1);
@@ -433,7 +428,7 @@ namespace AIToolbox {
      *
      * @return A non-unique list of all the vertices found.
      */
-    template <typename Range, typename P = std::identity>
+    template <typename Range, typename P = identity>
     PointSurface findVerticesNaive(const Range & range, P p = P{}) {
         PointSurface retval;
 

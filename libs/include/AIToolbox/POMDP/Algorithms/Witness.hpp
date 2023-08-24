@@ -16,7 +16,7 @@ namespace AIToolbox::POMDP {
     /**
      * @brief This class implements the Witness algorithm.
      *
-     * This algorithm solves a POMDP Model exactly. It computes solutions
+     * This algorithm solves a POMDP Model perfectly. It computes solutions
      * for each horizon incrementally, every new solution building upon the
      * previous one.
      *
@@ -56,7 +56,7 @@ namespace AIToolbox::POMDP {
              * as the difference between two iterations is less than the
              * tolerance specified.
              *
-             * @param horizon The horizon chosen.
+             * @param h The horizon chosen.
              * @param tolerance The tolerance factor to stop the value iteration loop.
              */
             Witness(unsigned horizon, double tolerance);
@@ -98,7 +98,7 @@ namespace AIToolbox::POMDP {
             unsigned getHorizon() const;
 
             /**
-             * @brief This function solves a POMDP::Model exactly.
+             * @brief This function solves a POMDP::Model completely.
              *
              * This function is pretty expensive (as are possibly all POMDP
              * solvers). It solves a series of LPs trying to find all possible
@@ -111,7 +111,7 @@ namespace AIToolbox::POMDP {
              * @return A tuple containing the maximum variation for the
              *         ValueFunction and the computed ValueFunction.
              */
-            template <IsModel M>
+            template <typename M, typename = std::enable_if_t<is_model_v<M>>>
             std::tuple<double, ValueFunction> operator()(const M & model);
 
         private:
@@ -140,7 +140,7 @@ namespace AIToolbox::POMDP {
             std::unordered_set<VObs, boost::hash<VObs>> triedVectors_;
     };
 
-    template <IsModel M>
+    template <typename M, typename>
     std::tuple<double, ValueFunction> Witness::operator()(const M& model) {
         S = model.getS();
         A = model.getA();

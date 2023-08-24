@@ -13,8 +13,8 @@
 #include <algorithm>
 #include <iterator>
 #include <iostream>
-#include "../../../Eigen/Core"
-#include "../../Eigen/FFT"
+#include <Eigen/Core>
+#include <unsupported/Eigen/FFT>
 
 using namespace std;
 using namespace Eigen;

@@ -2,7 +2,7 @@
 #ifndef EIGEN_BENCH_UTIL_H
 #define EIGEN_BENCH_UTIL_H
 
-#include "../Eigen/Core"
+#include <Eigen/Core>
 #include "BenchTimer.h"
 
 using namespace std;

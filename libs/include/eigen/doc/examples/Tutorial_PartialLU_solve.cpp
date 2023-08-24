@@ -1,6 +1,6 @@
+#include <Eigen/Core>
+#include <Eigen/LU>
 #include <iostream>
-#include "../../Eigen/Core"
-#include "../../Eigen/LU"
 
 using namespace std;
 using namespace Eigen;

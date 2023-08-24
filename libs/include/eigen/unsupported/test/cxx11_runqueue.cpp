@@ -10,8 +10,8 @@
 
 #define EIGEN_USE_THREADS
 #include <cstdlib>
-#include "../../test/main.h"
-#include "../Eigen/CXX11/ThreadPool"
+#include "main.h"
+#include <Eigen/CXX11/ThreadPool>
 
 
 // Visual studio doesn't implement a rand_r() function since its
@@ -227,7 +227,7 @@ void test_stress_runqueue()
   VERIFY(total.load() == 0);
 }
 
-void test_cxx11_runqueue()
+EIGEN_DECLARE_TEST(cxx11_runqueue)
 {
   CALL_SUBTEST_1(test_basic_runqueue());
   CALL_SUBTEST_2(test_empty_runqueue());

@@ -6,7 +6,7 @@
 
 namespace AIToolbox::Bandit {
     /**
-     * @brief This class implements a simple greedy policy.
+     * @brief This class models a simple greedy policy.
      *
      * This class always selects the greediest action with respect to the
      * already obtained experience.
@@ -16,7 +16,7 @@ namespace AIToolbox::Bandit {
             /**
              * @brief Basic constructor.
              *
-             * @param q The QFunction to act upon.
+             * @param A The size of the action space.
              */
             QGreedyPolicy(const QFunction & q);
 

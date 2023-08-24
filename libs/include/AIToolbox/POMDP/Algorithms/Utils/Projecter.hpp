@@ -9,8 +9,10 @@ namespace AIToolbox::POMDP {
     /**
      * @brief This class offers projecting facilities for Models.
      */
-    template <IsModel M>
+    template <typename M>
     class Projecter {
+        static_assert(is_model_v<M>, "This class only works for POMDP models!");
+
         public:
             using ProjectionsTable          = boost::multi_array<VList, 2>;
             using ProjectionsRow            = boost::multi_array<VList, 1>;
@@ -66,7 +68,7 @@ namespace AIToolbox::POMDP {
             PossibleObservationsTable possibleObservations_;
     };
 
-    template <IsModel M>
+    template <typename M>
     Projecter<M>::Projecter(const M& model) :
             model_(model), S(model_.getS()), A(model_.getA()), O(model_.getO()),
             discount_(model_.getDiscount()), possibleObservations_(boost::extents[A][O])
@@ -75,7 +77,7 @@ namespace AIToolbox::POMDP {
         computeImmediateRewards();
     }
 
-    template <IsModel M>
+    template <typename M>
     typename Projecter<M>::ProjectionsTable Projecter<M>::operator()(const VList & w) {
         ProjectionsTable projections( boost::extents[A][O] );
 
@@ -85,7 +87,7 @@ namespace AIToolbox::POMDP {
         return projections;
     }
 
-    template <IsModel M>
+    template <typename M>
     typename Projecter<M>::ProjectionsRow Projecter<M>::operator()(const VList & w, const size_t a) {
         ProjectionsRow projections( boost::extents[O] );
 
@@ -109,7 +111,7 @@ namespace AIToolbox::POMDP {
                 // For each value function in the previous timestep, we compute the new value
                 // if we performed action a and obtained observation o.
                 // vproj_{a,o}[s] = R(s,a) / |O| + discount * sum_{s'} ( T(s,a,s') * O(s',a,o) * v_{t-1}(s') )
-                if constexpr(IsModelEigen<M>) {
+                if constexpr(is_model_eigen_v<M>) {
                     vproj = model_.getTransitionFunction(a) * (v.cwiseProduct(model_.getObservationFunction(a).col(o)));
                 } else {
                     vproj.setZero();
@@ -125,10 +127,10 @@ namespace AIToolbox::POMDP {
         return projections;
     }
 
-    template <IsModel M>
+    template <typename M>
     void Projecter<M>::computeImmediateRewards() {
         immediateRewards_ = [&]{
-            if constexpr(MDP::IsModelEigen<M>)
+            if constexpr(MDP::is_model_eigen_v<M>)
                 return model_.getRewardFunction().transpose();
             else
                 return MDP::computeImmediateRewards(model_).transpose();
@@ -138,7 +140,7 @@ namespace AIToolbox::POMDP {
         immediateRewards_ /= static_cast<double>(O);
     }
 
-    template <IsModel M>
+    template <typename M>
     void Projecter<M>::computePossibleObservations() {
         for ( size_t a = 0; a < A; ++a )
             for ( size_t o = 0; o < O; ++o )

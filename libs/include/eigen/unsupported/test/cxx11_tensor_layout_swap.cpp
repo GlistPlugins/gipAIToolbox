@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 
@@ -53,7 +54,7 @@ static void test_swap_as_lvalue()
 }
 
 
-void test_cxx11_tensor_layout_swap()
+EIGEN_DECLARE_TEST(cxx11_tensor_layout_swap)
 {
   CALL_SUBTEST(test_simple_swap());
   CALL_SUBTEST(test_swap_as_lvalue());

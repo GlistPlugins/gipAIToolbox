@@ -21,9 +21,9 @@ int eigen_block_size_k, eigen_block_size_m, eigen_block_size_n;
 #define EIGEN_TEST_SPECIFIC_BLOCKING_SIZE_K eigen_block_size_k
 #define EIGEN_TEST_SPECIFIC_BLOCKING_SIZE_M eigen_block_size_m
 #define EIGEN_TEST_SPECIFIC_BLOCKING_SIZE_N eigen_block_size_n
-#include "../Eigen/Core"
+#include <Eigen/Core>
 
-#include "BenchTimer.h"
+#include <bench/BenchTimer.h>
 
 using namespace Eigen;
 using namespace std;

@@ -26,8 +26,10 @@ namespace AIToolbox::MDP {
      * Another advantage of clearing the memory is that, if the exploration
      * model is not perfect, imperfect information learned is also discarded.
      */
-    template <IsGenerativeModel M>
+    template <typename M>
     class Dyna2 {
+        static_assert(is_generative_model_v<M>, "This class only works for generative MDP models!");
+
         public:
             /**
              * @brief Basic constructor.
@@ -102,7 +104,7 @@ namespace AIToolbox::MDP {
              * This parameter determines how much to decrease updates for each
              * timestep in the past.
              *
-             * \sa SARSAL
+             * \SA SARSAL
              *
              * The lambda parameter must be >= 0.0 and <= 1.0, otherwise the
              * function will throw an std::invalid_argument.
@@ -124,7 +126,7 @@ namespace AIToolbox::MDP {
              * This parameter determines how much to decrease updates for each
              * timestep in the past.
              *
-             * \sa SARSAL
+             * \SA SARSAL
              *
              * The lambda parameter must be >= 0.0 and <= 1.0, otherwise the
              * function will throw an std::invalid_argument.
@@ -205,7 +207,7 @@ namespace AIToolbox::MDP {
             std::unique_ptr<PolicyInterface> internalPolicy_;
     };
 
-    template <IsGenerativeModel M>
+    template <typename M>
     Dyna2<M>::Dyna2(const M & m, const double alpha, const double lambda, const double tolerance, const unsigned n) :
             N(n), model_(m),
             permanentLearning_(model_, alpha, lambda, tolerance),
@@ -214,7 +216,7 @@ namespace AIToolbox::MDP {
     {
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::stepUpdateQ(const size_t s, const size_t a, const size_t s1, const size_t a1, const double rew) {
         // We copy the traces from the permanent SARSAL to the transient one so
         // that they will update their respective QFunctions in (nearly) the
@@ -237,7 +239,7 @@ namespace AIToolbox::MDP {
         transientLearning_.stepUpdateQ(s, a, s1, a1, rew);
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::batchUpdateQ(const size_t initS) {
         // This clearing may not be needed if this is called after stepUpdateQ
         // with the same s1 (since the set traces there will be correct then).
@@ -263,53 +265,53 @@ namespace AIToolbox::MDP {
         }
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::resetTransientLearning() {
         transientLearning_.setQFunction(permanentLearning_.getQFunction());
     }
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::setInternalPolicy(PolicyInterface * p) {
         internalPolicy_.reset(p);
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     unsigned Dyna2<M>::getN() const {
         return N;
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::setTolerance(const double t) {
         transientLearning_.setTolerance(t);
         permanentLearning_.setTolerance(t);
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     double Dyna2<M>::getTolerance() const {
         return permanentLearning_.getTolerance();
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     const QFunction & Dyna2<M>::getPermanentQFunction() const {
         return permanentLearning_.getQFunction();
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     const QFunction & Dyna2<M>::getTransientQFunction() const {
         return transientLearning_.getQFunction();
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     const M & Dyna2<M>::getModel() const {
         return model_;
     }
 
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::setPermanentLambda(double l) { permanentLearning_.setLambda(l); }
-    template <IsGenerativeModel M>
+    template <typename M>
     double Dyna2<M>::getPermanentLambda() const { return permanentLearning_.getLambda(); }
-    template <IsGenerativeModel M>
+    template <typename M>
     void Dyna2<M>::setTransientLambda(double l) { transientLearning_.setLambda(l); }
-    template <IsGenerativeModel M>
+    template <typename M>
     double Dyna2<M>::getTransientLambda() const { return transientLearning_.getLambda(); }
 }
 

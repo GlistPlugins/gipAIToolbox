@@ -12,8 +12,8 @@
 #include <fstream>
 #include <iomanip>
 
-#include "../unsupported/Eigen/LevenbergMarquardt"
 #include "main.h"
+#include <Eigen/LevenbergMarquardt>
 using namespace std;
 using namespace Eigen;
 
@@ -182,7 +182,7 @@ void test_denseLM_T()
   
 }
 
-void test_denseLM()
+EIGEN_DECLARE_TEST(denseLM)
 {
   CALL_SUBTEST_2(test_denseLM_T<double>());
   

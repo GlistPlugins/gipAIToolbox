@@ -4,10 +4,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-
-#include "../../Eigen/SparseLU"
-#include "../../unsupported/Eigen/SparseExtra"
-#include "../BenchTimer.h"
+#include <unsupported/Eigen/SparseExtra>
+#include <Eigen/SparseLU>
+#include <bench/BenchTimer.h>
 #ifdef EIGEN_METIS_SUPPORT
 #include <Eigen/MetisSupport>
 #endif

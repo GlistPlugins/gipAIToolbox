@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "benchmark.h"
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +22,6 @@
 #include <inttypes.h>
 #include <time.h>
 #include <map>
-#include "benchmark.h"
 
 static int64_t g_flops_processed;
 static int64_t g_benchmark_total_time_ns;

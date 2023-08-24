@@ -33,8 +33,10 @@ namespace AIToolbox::POMDP {
      * belief. Note that values computed in different methods may differ
      * due to floating point approximation errors.
      */
-    template <IsModel M>
+    template <typename M>
     class RTBSS {
+        static_assert(is_model_v<M>, "This class only works for POMDP models!");
+
         public:
 
             /**
@@ -104,12 +106,12 @@ namespace AIToolbox::POMDP {
             double upperBound(const Belief & b, size_t a, unsigned horizon) const;
     };
 
-    template <IsModel M>
+    template <typename M>
     RTBSS<M>::RTBSS(const M& m, const double maxR) :
             model_(m), S(model_.getS()), A(model_.getA()),
             O(model_.getO()), maxR_(maxR) {}
 
-    template <IsModel M>
+    template <typename M>
     std::tuple<size_t, double> RTBSS<M>::sampleAction(const Belief& b, const unsigned horizon) {
         maxA_ = 0; maxDepth_ = horizon;
 
@@ -118,7 +120,7 @@ namespace AIToolbox::POMDP {
         return std::make_tuple(maxA_, value);
     }
 
-    template <IsModel M>
+    template <typename M>
     double RTBSS<M>::simulate(const Belief & b, const unsigned horizon) {
         if ( horizon == 0 ) return 0;
 
@@ -151,12 +153,12 @@ namespace AIToolbox::POMDP {
         return max;
     }
 
-    template <IsModel M>
+    template <typename M>
     double RTBSS<M>::upperBound(const Belief &, const size_t, const unsigned horizon) const {
         return model_.getDiscount() * maxR_ * horizon;
     }
 
-    template <IsModel M>
+    template <typename M>
     const M& RTBSS<M>::getModel() const {
         return model_;
     }

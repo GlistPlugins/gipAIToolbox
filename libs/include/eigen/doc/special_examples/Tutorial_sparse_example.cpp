@@ -1,6 +1,6 @@
+#include <Eigen/Sparse>
 #include <vector>
 #include <iostream>
-#include "../../Eigen/Sparse"
 
 typedef Eigen::SparseMatrix<double> SpMat; // declares a column-major sparse matrix type of double
 typedef Eigen::Triplet<double> T;
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   }
   
   int n = 300;  // size of the image
-  int m = n*n;  // number of unknows (=number of pixels)
+  int m = n*n;  // number of unknowns (=number of pixels)
 
   // Assembly:
   std::vector<T> coefficients;            // list of non-zeros coefficients

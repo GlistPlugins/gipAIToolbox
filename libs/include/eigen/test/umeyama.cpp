@@ -7,11 +7,13 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Core"
-#include "../Eigen/Geometry"
-#include "../Eigen/LU" // required for MatrixBase::determinant
-#include "../Eigen/SVD" // required for SVD
 #include "main.h"
+
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
+#include <Eigen/LU> // required for MatrixBase::determinant
+#include <Eigen/SVD> // required for SVD
 
 using namespace Eigen;
 
@@ -25,7 +27,7 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic> randMatrixUnitary(int size)
   MatrixType Q;
 
   int max_tries = 40;
-  double is_unitary = false;
+  bool is_unitary = false;
 
   while (!is_unitary && max_tries > 0)
   {
@@ -153,7 +155,7 @@ void run_fixed_size_test(int num_elements)
   VERIFY(error < Scalar(16)*std::numeric_limits<Scalar>::epsilon());
 }
 
-void test_umeyama()
+EIGEN_DECLARE_TEST(umeyama)
 {
   for (int i=0; i<g_repeat; ++i)
   {

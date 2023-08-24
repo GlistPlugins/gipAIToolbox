@@ -1,4 +1,3 @@
-
 #define EIGEN_USE_THREADS
 
 #include <string>

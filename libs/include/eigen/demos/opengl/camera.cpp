@@ -9,10 +9,10 @@
 
 #include "camera.h"
 
+#include "gpuhelper.h"
 #include <GL/glu.h>
 
-#include "../../Eigen/LU"
-#include "gpuhelper.h"
+#include "Eigen/LU"
 using namespace Eigen;
 
 Camera::Camera()

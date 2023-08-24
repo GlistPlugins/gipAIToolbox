@@ -7,11 +7,13 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
+#include <Eigen/CXX11/TensorSymmetry>
+
 #include <map>
 #include <set>
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
-#include "../Eigen/CXX11/TensorSymmetry"
 
 using Eigen::Tensor;
 using Eigen::SGroup;
@@ -799,7 +801,7 @@ static void test_tensor_randacc()
   }
 }
 
-void test_cxx11_tensor_symmetry()
+EIGEN_DECLARE_TEST(cxx11_tensor_symmetry)
 {
   CALL_SUBTEST(test_symgroups_static());
   CALL_SUBTEST(test_symgroups_dynamic());

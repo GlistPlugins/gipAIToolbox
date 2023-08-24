@@ -4,7 +4,7 @@
 #include <tuple>
 #include <random>
 
-#include <AIToolbox/Seeder.hpp>
+#include <AIToolbox/Impl/Seeder.hpp>
 #include <AIToolbox/Types.hpp>
 #include <AIToolbox/Utils/Probability.hpp>
 #include <AIToolbox/MDP/Types.hpp>
@@ -63,8 +63,10 @@ namespace AIToolbox::MDP {
      * consumption in such cases, which may also improve speed by effect of
      * improved caching.
      */
-    template <IsExperience E>
+    template <typename E>
     class SparseMaximumLikelihoodModel {
+        static_assert(is_experience_v<E>, "This class only works for MDP experiences!");
+
         public:
             using TransitionMatrix   = SparseMatrix3D;
             using RewardMatrix       = SparseMatrix2D;
@@ -269,10 +271,10 @@ namespace AIToolbox::MDP {
             mutable RandomEngine rand_;
     };
 
-    template <IsExperience E>
+    template <typename E>
     SparseMaximumLikelihoodModel<E>::SparseMaximumLikelihoodModel(const E & exp, const double discount, const bool toSync) :
             S(exp.getS()), A(exp.getA()), experience_(exp), transitions_(A, SparseMatrix2D(S, S)),
-            rewards_(S, A), rand_(Seeder::getSeed())
+            rewards_(S, A), rand_(Impl::Seeder::getSeed())
     {
         setDiscount(discount);
 
@@ -296,20 +298,20 @@ namespace AIToolbox::MDP {
         }
     }
 
-    template <IsExperience E>
+    template <typename E>
     void SparseMaximumLikelihoodModel<E>::setDiscount(const double d) {
         if ( d <= 0.0 || d > 1.0 ) throw std::invalid_argument("Discount parameter must be in (0,1]");
         discount_ = d;
     }
 
-    template <IsExperience E>
+    template <typename E>
     void SparseMaximumLikelihoodModel<E>::sync() {
         for ( size_t a = 0; a < A; ++a )
             for ( size_t s = 0; s < S; ++s )
                 sync(s,a);
     }
 
-    template <IsExperience E>
+    template <typename E>
     void SparseMaximumLikelihoodModel<E>::sync(const size_t s, const size_t a) {
         // Nothing to do
         const auto visitSum = experience_.getVisitsSum(s, a);
@@ -329,7 +331,7 @@ namespace AIToolbox::MDP {
         // Create reciprocal for fast division
         const double visitSumReciprocal = 1.0 / visitSum;
 
-        if constexpr (IsExperienceEigen<E>) {
+        if constexpr (is_experience_eigen_v<E>) {
             transitions_[a].row(s) = experience_.getVisitsTable(a).row(s).template cast<double>() * visitSumReciprocal;
         } else {
             // Normalize
@@ -341,7 +343,7 @@ namespace AIToolbox::MDP {
         }
     }
 
-    template <IsExperience E>
+    template <typename E>
     void SparseMaximumLikelihoodModel<E>::sync(const size_t s, const size_t a, const size_t s1) {
         const auto visitSum = experience_.getVisitsSum(s, a);
         // The second condition is related to numerical errors. Once in a
@@ -372,24 +374,24 @@ namespace AIToolbox::MDP {
         }
     }
 
-    template <IsExperience E>
+    template <typename E>
     std::tuple<size_t, double> SparseMaximumLikelihoodModel<E>::sampleSR(const size_t s, const size_t a) const {
         const size_t s1 = sampleProbability(S, transitions_[a].row(s), rand_);
 
         return std::make_tuple(s1, rewards_.coeff(s, a));
     }
 
-    template <IsExperience E>
+    template <typename E>
     double SparseMaximumLikelihoodModel<E>::getTransitionProbability(const size_t s, const size_t a, const size_t s1) const {
         return transitions_[a].coeff(s, s1);
     }
 
-    template <IsExperience E>
+    template <typename E>
     double SparseMaximumLikelihoodModel<E>::getExpectedReward(const size_t s, const size_t a, const size_t) const {
         return rewards_.coeff(s, a);
     }
 
-    template <IsExperience E>
+    template <typename E>
     bool SparseMaximumLikelihoodModel<E>::isTerminal(const size_t s) const {
         for ( size_t a = 0; a < A; ++a )
             if ( !checkEqualSmall(1.0, transitions_[a].coeff(s, s)) )
@@ -397,21 +399,21 @@ namespace AIToolbox::MDP {
         return true;
     }
 
-    template <IsExperience E>
+    template <typename E>
     size_t SparseMaximumLikelihoodModel<E>::getS() const { return S; }
-    template <IsExperience E>
+    template <typename E>
     size_t SparseMaximumLikelihoodModel<E>::getA() const { return A; }
-    template <IsExperience E>
+    template <typename E>
     double SparseMaximumLikelihoodModel<E>::getDiscount() const { return discount_; }
-    template <IsExperience E>
+    template <typename E>
     const E & SparseMaximumLikelihoodModel<E>::getExperience() const { return experience_; }
 
-    template <IsExperience E>
+    template <typename E>
     const typename SparseMaximumLikelihoodModel<E>::TransitionMatrix & SparseMaximumLikelihoodModel<E>::getTransitionFunction() const { return transitions_; }
-    template <IsExperience E>
+    template <typename E>
     const typename SparseMaximumLikelihoodModel<E>::RewardMatrix & SparseMaximumLikelihoodModel<E>::getRewardFunction() const { return rewards_; }
 
-    template <IsExperience E>
+    template <typename E>
     const SparseMatrix2D & SparseMaximumLikelihoodModel<E>::getTransitionFunction(const size_t a) const { return transitions_[a]; }
 }
 

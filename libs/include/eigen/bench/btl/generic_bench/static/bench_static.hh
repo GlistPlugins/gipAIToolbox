@@ -20,14 +20,13 @@
 #ifndef BENCH_STATIC_HH
 #define BENCH_STATIC_HH
 
+#include "btl.hh"
+#include "bench_parameter.hh"
 #include <iostream>
-
-#include "../bench_parameter.hh"
-#include "../btl.hh"
-#include "../timers/portable_perf_analyzer.hh"
-#include "../utils/utilities.h"
-#include "../utils/xy_file.hh"
-#include "static_size_generator.hh"
+#include "utilities.h"
+#include "xy_file.hh"
+#include "static/static_size_generator.hh"
+#include "timers/portable_perf_analyzer.hh"
 // #include "timers/mixed_perf_analyzer.hh"
 // #include "timers/x86_perf_analyzer.hh"
 

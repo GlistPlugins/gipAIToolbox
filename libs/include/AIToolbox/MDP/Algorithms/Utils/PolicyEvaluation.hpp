@@ -4,7 +4,7 @@
 #include <tuple>
 #include <iterator>
 
-#include <AIToolbox/Logging.hpp>
+#include <AIToolbox/Impl/Logging.hpp>
 #include <AIToolbox/MDP/Types.hpp>
 #include <AIToolbox/MDP/TypeTraits.hpp>
 #include <AIToolbox/MDP/Utils.hpp>
@@ -24,8 +24,10 @@ namespace AIToolbox::MDP {
      *
      * @tparam M The type of model that is solved by the algorithm.
      */
-    template <IsModel M>
+    template <typename M>
     class PolicyEvaluation {
+        static_assert(is_model_v<M>, "This class only works for MDP models!");
+
         public:
             /**
              * @brief Basic constructor.
@@ -130,7 +132,7 @@ namespace AIToolbox::MDP {
             size_t S, A;
     };
 
-    template <IsModel M>
+    template <typename M>
     PolicyEvaluation<M>::PolicyEvaluation(const M & m, const unsigned horizon, const double tolerance, Values v) :
             horizon_(horizon), vParameter_(std::move(v)), model_(m), S(0), A(0)
     {
@@ -141,11 +143,11 @@ namespace AIToolbox::MDP {
         A = model_.getA();
 
         // Only compute the immediate rewards if we need them.
-        if constexpr (!IsModelEigen<M>)
+        if constexpr (!is_model_eigen_v<M>)
             immediateRewards_ = computeImmediateRewards(m);
     }
 
-    template <IsModel M>
+    template <typename M>
     std::tuple<double, Values, QFunction> PolicyEvaluation<M>::operator()(const PolicyInterface & policy) {
         {
             // Verify that parameter value function is compatible.
@@ -180,7 +182,7 @@ namespace AIToolbox::MDP {
             v1_ *= model_.getDiscount();
             // We use the implicit reward function if it is available,
             // otherwise we use the one we computed beforehand.
-            if constexpr(IsModelEigen<M>)
+            if constexpr(is_model_eigen_v<M>)
                 q = computeQFunction(model_, v1_, model_.getRewardFunction());
             else
                 q = computeQFunction(model_, v1_, immediateRewards_);
@@ -200,29 +202,29 @@ namespace AIToolbox::MDP {
         return std::make_tuple(useTolerance ? variation : 0.0, std::move(v1_), std::move(q));
     }
 
-    template <IsModel M>
+    template <typename M>
     void PolicyEvaluation<M>::setTolerance(const double t) {
         if ( t < 0.0 ) throw std::invalid_argument("Tolerance must be >= 0");
         tolerance_ = t;
     }
 
-    template <IsModel M>
+    template <typename M>
     void PolicyEvaluation<M>::setHorizon(const unsigned h) {
         horizon_ = h;
     }
 
-    template <IsModel M>
+    template <typename M>
     void PolicyEvaluation<M>::setValues(Values v) {
         vParameter_ = std::move(v);
     }
 
-    template <IsModel M>
+    template <typename M>
     double PolicyEvaluation<M>::getTolerance()   const { return tolerance_; }
 
-    template <IsModel M>
+    template <typename M>
     unsigned PolicyEvaluation<M>::getHorizon() const { return horizon_; }
 
-    template <IsModel M>
+    template <typename M>
     const Values & PolicyEvaluation<M>::getValues() const { return vParameter_; }
 }
 

@@ -1,5 +1,5 @@
-#ifndef AI_TOOLBOX_POMDP_EJS4_HEADER_FILE
-#define AI_TOOLBOX_POMDP_EJS4_HEADER_FILE
+#ifndef AI_TOOLBOX_POMDP_EJS4
+#define AI_TOOLBOX_POMDP_EJS4
 
 #include <AIToolbox/MDP/Model.hpp>
 #include <AIToolbox/POMDP/Model.hpp>
@@ -8,12 +8,12 @@ namespace AIToolbox::POMDP {
     /**
      * @brief This function returns a POMDP model of the ejs4 problem.
      */
-    Model<MDP::Model> makeEJS4() {
-        using PModel = Model<MDP::Model>;
+	AIToolbox::POMDP::Model<AIToolbox::MDP::Model> makeEJS4() {
+        using PModel = AIToolbox::POMDP::Model<AIToolbox::MDP::Model>;
         constexpr size_t S = 3, A = 2, O = 2;
 
-        MDP::Model::TransitionMatrix t(A);
-        MDP::Model::RewardMatrix r(S, A);
+        AIToolbox::MDP::Model::TransitionMatrix t(A);
+        AIToolbox::MDP::Model::RewardMatrix r(S, A);
         PModel::ObservationMatrix o(A);
 
         for (size_t a = 0; a < A; ++a) {

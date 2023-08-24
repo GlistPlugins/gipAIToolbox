@@ -72,7 +72,7 @@ namespace AIToolbox::MDP {
              * @param model The MDP model that DoubleQLearning will use as a base.
              * @param alpha The learning rate of the DoubleQLearning method.
              */
-            template <IsGenerativeModel M>
+            template <typename M, typename = std::enable_if_t<is_generative_model_v<M>>>
             DoubleQLearning(const M& model, double alpha = 0.1);
 
             /**
@@ -219,7 +219,7 @@ namespace AIToolbox::MDP {
             QFunction qa_, qc_;
     };
 
-    template <IsGenerativeModel M>
+    template <typename M, typename>
     DoubleQLearning::DoubleQLearning(const M& model, const double alpha) :
             DoubleQLearning(model.getS(), model.getA(), model.getDiscount(), alpha) {}
 }

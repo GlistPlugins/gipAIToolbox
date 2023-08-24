@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
 
 
 static void test_empty_tensor()
@@ -32,7 +33,7 @@ static void test_empty_fixed_size_tensor()
 }
 
 
-void test_cxx11_tensor_empty()
+EIGEN_DECLARE_TEST(cxx11_tensor_empty)
 {
    CALL_SUBTEST(test_empty_tensor());
    CALL_SUBTEST(test_empty_fixed_size_tensor());

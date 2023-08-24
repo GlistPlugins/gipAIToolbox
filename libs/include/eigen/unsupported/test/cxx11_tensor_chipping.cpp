@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 
@@ -42,7 +43,7 @@ static void test_simple_chip()
   VERIFY_IS_EQUAL(chip2.dimension(2), 7);
   VERIFY_IS_EQUAL(chip2.dimension(3), 11);
   for (int i = 0; i < 2; ++i) {
-    for (int j = 0; j < 3; ++j) {
+    for (int j = 0; j < 5; ++j) {
       for (int k = 0; k < 7; ++k) {
         for (int l = 0; l < 11; ++l) {
           VERIFY_IS_EQUAL(chip2(i,j,k,l), tensor(i,1,j,k,l));
@@ -74,7 +75,7 @@ static void test_simple_chip()
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < 3; ++j) {
       for (int k = 0; k < 5; ++k) {
-        for (int l = 0; l < 7; ++l) {
+        for (int l = 0; l < 11; ++l) {
           VERIFY_IS_EQUAL(chip4(i,j,k,l), tensor(i,j,k,5,l));
         }
       }
@@ -125,7 +126,7 @@ static void test_dynamic_chip()
   VERIFY_IS_EQUAL(chip2.dimension(2), 7);
   VERIFY_IS_EQUAL(chip2.dimension(3), 11);
   for (int i = 0; i < 2; ++i) {
-    for (int j = 0; j < 3; ++j) {
+    for (int j = 0; j < 5; ++j) {
       for (int k = 0; k < 7; ++k) {
         for (int l = 0; l < 11; ++l) {
           VERIFY_IS_EQUAL(chip2(i,j,k,l), tensor(i,1,j,k,l));
@@ -157,7 +158,7 @@ static void test_dynamic_chip()
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < 3; ++j) {
       for (int k = 0; k < 5; ++k) {
-        for (int l = 0; l < 7; ++l) {
+        for (int l = 0; l < 11; ++l) {
           VERIFY_IS_EQUAL(chip4(i,j,k,l), tensor(i,j,k,5,l));
         }
       }
@@ -409,7 +410,7 @@ static void test_chip_raw_data_row_major()
   VERIFY_IS_EQUAL(chip4.data(), static_cast<float*>(0));
 }
 
-void test_cxx11_tensor_chipping()
+EIGEN_DECLARE_TEST(cxx11_tensor_chipping)
 {
   CALL_SUBTEST(test_simple_chip<ColMajor>());
   CALL_SUBTEST(test_simple_chip<RowMajor>());

@@ -3,12 +3,14 @@
 //
 // Copyright (C) 2009 Thomas Capricelli <orzel@freehackers.org>
 
-#include "../Eigen/NonLinearOptimization"
-
 #include <stdio.h>
 
-#include "../../Eigen/src/Core/util/DisableStupidWarnings.h"
-#include "../../test/main.h"
+#include "main.h"
+#include <unsupported/Eigen/NonLinearOptimization>
+
+// This disables some useless Warnings on MSVC.
+// It is intended to be done for this test only.
+#include <Eigen/src/Core/util/DisableStupidWarnings.h>
 
 // tolerance for chekcing number of iterations
 #define LM_EVAL_COUNT_TOL 4/3
@@ -1787,7 +1789,7 @@ void testNistEckerle4(void)
   VERIFY_IS_APPROX(x[2], 4.5154121844E+02);
 }
 
-void test_NonLinearOptimization()
+EIGEN_DECLARE_TEST(NonLinearOptimization)
 {
     // Tests using the examples provided by (c)minpack
     CALL_SUBTEST/*_1*/(testChkder());

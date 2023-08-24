@@ -7,12 +7,12 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include "main.h"
 #include <limits>
 #include <map>
 
-#include "../../Eigen/Dense"
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include <Eigen/Dense>
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 
@@ -88,7 +88,7 @@ static void test_sizes_as_index()
 }
 
 
-void test_cxx11_tensor_custom_index() {
+EIGEN_DECLARE_TEST(cxx11_tensor_custom_index) {
   test_map_as_index<ColMajor>();
   test_map_as_index<RowMajor>();
   test_matrix_as_index<ColMajor>();

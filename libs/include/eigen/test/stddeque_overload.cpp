@@ -8,9 +8,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Geometry"
-#include "../Eigen/StdDeque"
 #include "main.h"
+
+#include <Eigen/StdDeque>
+#include <Eigen/Geometry>
 
 EIGEN_DEFINE_STL_DEQUE_SPECIALIZATION(Vector4f)
 
@@ -27,8 +28,8 @@ EIGEN_DEFINE_STL_DEQUE_SPECIALIZATION(Quaterniond)
 template<typename MatrixType>
 void check_stddeque_matrix(const MatrixType& m)
 {
-  typename MatrixType::Index rows = m.rows();
-  typename MatrixType::Index cols = m.cols();
+  Index rows = m.rows();
+  Index cols = m.cols();
   MatrixType x = MatrixType::Random(rows,cols), y = MatrixType::Random(rows,cols);
   std::deque<MatrixType> v(10, MatrixType::Zero(rows,cols)), w(20, y);
   v[5] = x;
@@ -127,7 +128,7 @@ void check_stddeque_quaternion(const QuaternionType&)
   }
 }
 
-void test_stddeque_overload()
+EIGEN_DECLARE_TEST(stddeque_overload)
 {
   // some non vectorizable fixed sizes
   CALL_SUBTEST_1(check_stddeque_matrix(Vector2f()));

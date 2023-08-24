@@ -1,6 +1,5 @@
 #include <iostream>
-
-#include "../../Eigen/Core"
+#include <Eigen/Core>
 using namespace Eigen;
 
 template <typename Derived>

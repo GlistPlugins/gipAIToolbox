@@ -10,7 +10,7 @@
 
 namespace AIToolbox::Factored::Bandit {
     /**
-     * @brief This class implements a Thompson sampling policy.
+     * @brief This class models a Thompson sampling policy.
      *
      * This class uses the Normal distribution in order to estimate its
      * certainty about each arm average reward. Thus, each arm is estimated
@@ -85,13 +85,6 @@ namespace AIToolbox::Factored::Bandit {
              * @param rnd The random engine needed to sample.
              */
             static void setupGraph(const Experience & exp, VariableElimination::GVE::Graph & graph, RandomEngine & rnd);
-
-            /**
-             * @brief This function returns a reference to the underlying Experience we use.
-             *
-             * @return The internal Experience reference.
-             */
-            const Experience & getExperience() const;
 
         private:
             const Experience & exp_;
