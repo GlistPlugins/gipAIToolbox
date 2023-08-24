@@ -10,8 +10,8 @@
 #define EIGEN_RUNTIME_NO_MALLOC
 #include "main.h"
 #include <limits>
-#include "../Eigen/Eigenvalues"
-#include "../Eigen/LU"
+#include <Eigen/Eigenvalues>
+#include <Eigen/LU>
 
 template<typename MatrixType> void generalized_eigensolver_real(const MatrixType& m)
 {
@@ -85,7 +85,7 @@ template<typename MatrixType> void generalized_eigensolver_real(const MatrixType
   }
 }
 
-void test_eigensolver_generalized_real()
+EIGEN_DECLARE_TEST(eigensolver_generalized_real)
 {
   for(int i = 0; i < g_repeat; i++) {
     int s = 0;

@@ -9,10 +9,9 @@
 #ifndef TENSOR_INTERFACE_HH
 #define TENSOR_INTERFACE_HH
 
+#include <unsupported/Eigen/CXX11/Tensor>
 #include <vector>
-
-#include "../../../../unsupported/Eigen/CXX11/Tensor"
-#include "../../generic_bench/btl.hh"
+#include "btl.hh"
 
 using namespace Eigen;
 

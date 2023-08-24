@@ -8,9 +8,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Geometry"
-#include "../Eigen/StdList"
 #include "main.h"
+#include <Eigen/StdList>
+#include <Eigen/Geometry>
 
 template<typename MatrixType>
 void check_stdlist_matrix(const MatrixType& m)
@@ -100,7 +100,7 @@ void check_stdlist_quaternion(const QuaternionType&)
   VERIFY_IS_APPROX(v.back(), x);
 }
 
-void test_stdlist()
+EIGEN_DECLARE_TEST(stdlist)
 {
   // some non vectorizable fixed sizes
   CALL_SUBTEST_1(check_stdlist_matrix(Vector2f()));

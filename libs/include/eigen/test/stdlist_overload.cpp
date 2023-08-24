@@ -8,9 +8,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Geometry"
-#include "../Eigen/StdList"
 #include "main.h"
+
+#include <Eigen/StdList>
+#include <Eigen/Geometry>
 
 EIGEN_DEFINE_STL_LIST_SPECIALIZATION(Vector4f)
 
@@ -43,8 +44,8 @@ void set(Container & c, Position position, const Value & value)
 template<typename MatrixType>
 void check_stdlist_matrix(const MatrixType& m)
 {
-  typename MatrixType::Index rows = m.rows();
-  typename MatrixType::Index cols = m.cols();
+  Index rows = m.rows();
+  Index cols = m.cols();
   MatrixType x = MatrixType::Random(rows,cols), y = MatrixType::Random(rows,cols);
   std::list<MatrixType> v(10, MatrixType::Zero(rows,cols)), w(20, y);
   typename std::list<MatrixType>::iterator itv = get(v, 5);
@@ -161,7 +162,7 @@ void check_stdlist_quaternion(const QuaternionType&)
   }
 }
 
-void test_stdlist_overload()
+EIGEN_DECLARE_TEST(stdlist_overload)
 {
   // some non vectorizable fixed sizes
   CALL_SUBTEST_1(check_stdlist_matrix(Vector2f()));

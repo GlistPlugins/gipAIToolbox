@@ -7,10 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include <limits>
-
-#include "../Eigen/Eigenvalues"
 #include "main.h"
+#include <limits>
+#include <Eigen/Eigenvalues>
 
 template<typename MatrixType> void verifyIsQuasiTriangular(const MatrixType& T)
 {
@@ -99,7 +98,7 @@ template<typename MatrixType> void schur(int size = MatrixType::ColsAtCompileTim
   }
 }
 
-void test_schur_real()
+EIGEN_DECLARE_TEST(schur_real)
 {
   CALL_SUBTEST_1(( schur<Matrix4f>() ));
   CALL_SUBTEST_2(( schur<MatrixXd>(internal::random<int>(1,EIGEN_TEST_MAX_SIZE/4)) ));

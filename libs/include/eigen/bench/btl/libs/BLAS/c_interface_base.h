@@ -2,8 +2,8 @@
 #ifndef BTL_C_INTERFACE_BASE_H
 #define BTL_C_INTERFACE_BASE_H
 
+#include "utilities.h"
 #include <vector>
-#include "../../generic_bench/utils/utilities.h"
 
 template<class real> class c_interface_base
 {

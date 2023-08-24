@@ -1,8 +1,7 @@
 
 #include <iostream>
-
-#include "../Eigen/Core"
-#include "BenchUtil.h"
+#include <Eigen/Core>
+#include <bench/BenchUtil.h>
 using namespace Eigen;
 
 #ifndef REPEAT

@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../actions/basic_actions.hh"
-#include "../../generic_bench/bench.hh"
-#include "../../generic_bench/utils/utilities.h"
+#include "utilities.h"
 #include "tensor_interface.hh"
+#include "bench.hh"
+#include "basic_actions.hh"
 
 BTL_MAIN;
 

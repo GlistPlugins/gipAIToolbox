@@ -1,8 +1,7 @@
 #include <iostream>
-
-#include "../Eigen/Core"
-#include "../Eigen/Geometry"
-#include "BenchTimer.h"
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <bench/BenchTimer.h>
 
 using namespace Eigen; 
 

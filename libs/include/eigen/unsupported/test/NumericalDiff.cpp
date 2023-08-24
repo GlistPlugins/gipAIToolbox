@@ -3,11 +3,10 @@
 //
 // Copyright (C) 2009 Thomas Capricelli <orzel@freehackers.org>
 
-#include "../Eigen/NumericalDiff"
-
 #include <stdio.h>
 
-#include "../../test/main.h"
+#include "main.h"
+#include <unsupported/Eigen/NumericalDiff>
     
 // Generic functor
 template<typename _Scalar, int NX=Dynamic, int NY=Dynamic>
@@ -25,7 +24,7 @@ struct Functor
   int m_inputs, m_values;
   
   Functor() : m_inputs(InputsAtCompileTime), m_values(ValuesAtCompileTime) {}
-  Functor(int inputs, int values) : m_inputs(inputs), m_values(values) {}
+  Functor(int inputs_, int values_) : m_inputs(inputs_), m_values(values_) {}
   
   int inputs() const { return m_inputs; }
   int values() const { return m_values; }
@@ -108,7 +107,7 @@ void test_central()
     VERIFY_IS_APPROX(jac, actual_jac);
 }
 
-void test_NumericalDiff()
+EIGEN_DECLARE_TEST(NumericalDiff)
 {
     CALL_SUBTEST(test_forward());
     CALL_SUBTEST(test_central());

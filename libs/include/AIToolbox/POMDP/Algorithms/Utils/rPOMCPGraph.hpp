@@ -144,7 +144,7 @@ namespace AIToolbox::POMDP {
     // anyway, and that there are not going to be huge problems, as each particle
     // should be seen enough times to still keep a decent approximation of its
     // entropy term. Minor errors are ok since this is still an estimation.
-    template <>
+    /*template <>
     void BeliefNode<true>::updateBeliefAndKnowledge(const size_t s) {
         // Remove entropy term for this state from summatory
         knowledgeMeasure_ -= trackBelief_[s].negativeEntropy;
@@ -167,7 +167,7 @@ namespace AIToolbox::POMDP {
             maxS_ = s;
 
         knowledgeMeasure_ = static_cast<double>(trackBelief_[maxS_].N) / static_cast<double>(N+1);
-    }
+    }*/
 
     template <bool UseEntropy>
     double BeliefNode<UseEntropy>::getKnowledgeMeasure() const {

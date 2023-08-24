@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/Splines"
+#include "main.h"
+
+#include <unsupported/Eigen/Splines>
 
 namespace Eigen {
   
@@ -267,7 +268,7 @@ void check_global_interpolation_with_derivatives2d()
   }
 }
 
-void test_splines()
+EIGEN_DECLARE_TEST(splines)
 {
   for (int i = 0; i < g_repeat; ++i)
   {

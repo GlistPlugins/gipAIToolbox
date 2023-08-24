@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/FFT"
+#include "main.h"
+#include <unsupported/Eigen/FFT>
 
 template <typename T> 
 std::complex<T> RandomCpx() { return std::complex<T>( (T)(rand()/(T)RAND_MAX - .5), (T)(rand()/(T)RAND_MAX - .5) ); }
@@ -225,7 +225,7 @@ void test_return_by_value(int len)
     VERIFY( (in1-in).norm() < test_precision<float>() );
 }
 
-void test_FFTW()
+EIGEN_DECLARE_TEST(FFTW)
 {
   CALL_SUBTEST( test_return_by_value(32) );
   //CALL_SUBTEST( ( test_complex2d<float,4,8> () ) ); CALL_SUBTEST( ( test_complex2d<double,4,8> () ) );

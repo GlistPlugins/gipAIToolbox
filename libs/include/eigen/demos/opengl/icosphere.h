@@ -10,8 +10,8 @@
 #ifndef EIGEN_ICOSPHERE_H
 #define EIGEN_ICOSPHERE_H
 
+#include <Eigen/Core>
 #include <vector>
-#include "../../Eigen/Core"
 
 class IcoSphere
 {

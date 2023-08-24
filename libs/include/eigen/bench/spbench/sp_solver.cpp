@@ -4,15 +4,16 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-
-#include "../../Eigen/Householder"
-#include "../../Eigen/IterativeLinearSolvers"
-#include "../../Eigen/Jacobi"
-#include "../../Eigen/LU"
-#include "../../Eigen/SuperLUSupport"
-#include "../../unsupported/Eigen/IterativeSolvers"
-#include "../../unsupported/Eigen/SparseExtra"
-#include "../BenchTimer.h"
+#include <Eigen/Jacobi>
+#include <Eigen/Householder>
+#include <Eigen/IterativeLinearSolvers>
+#include <Eigen/LU>
+#include <unsupported/Eigen/SparseExtra>
+//#include <Eigen/SparseLU>
+#include <Eigen/SuperLUSupport>
+// #include <unsupported/Eigen/src/IterativeSolvers/Scaling.h>
+#include <bench/BenchTimer.h>
+#include <unsupported/Eigen/IterativeSolvers>
 using namespace std;
 using namespace Eigen;
 

@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include "main.h"
+#include <unsupported/Eigen/Polynomials>
 #include <iostream>
 #include <algorithm>
-#include "../../test/main.h"
-#include "../Eigen/Polynomials"
 
 using namespace std;
 
@@ -207,7 +207,7 @@ void polynomialsolver(int deg)
       realRoots );
 }
 
-void test_polynomialsolver()
+EIGEN_DECLARE_TEST(polynomialsolver)
 {
   for(int i = 0; i < g_repeat; i++)
   {

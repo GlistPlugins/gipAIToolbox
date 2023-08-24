@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/AutoDiff"
+#include "main.h"
+#include <unsupported/Eigen/AutoDiff>
 
 /*
  * In this file scalar derivations are tested for correctness.
@@ -81,7 +81,7 @@ void check_limits_specialization()
   typedef std::numeric_limits<AD> A;
   typedef std::numeric_limits<Scalar> B;
 
-  // workaround "unsed typedef" warning:
+  // workaround "unused typedef" warning:
   VERIFY(!bool(internal::is_same<B, A>::value));
 
 #if EIGEN_HAS_CXX11
@@ -89,7 +89,7 @@ void check_limits_specialization()
 #endif
 }
 
-void test_autodiff_scalar()
+EIGEN_DECLARE_TEST(autodiff_scalar)
 {
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST_1( check_atan2<float>() );

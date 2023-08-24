@@ -1,5 +1,5 @@
-#ifndef AI_TOOLBOX_POMDP_CHENGD35_HEADER_FILE
-#define AI_TOOLBOX_POMDP_CHENGD35_HEADER_FILE
+#ifndef AI_TOOLBOX_POMDP_CHENGD35
+#define AI_TOOLBOX_POMDP_CHENGD35
 
 #include <AIToolbox/MDP/Model.hpp>
 #include <AIToolbox/POMDP/Model.hpp>
@@ -8,12 +8,12 @@ namespace AIToolbox::POMDP {
     /**
      * @brief This function returns a POMDP model of the chengD35 problem.
      */
-    Model<MDP::Model> makeChengD35() {
-        using PModel = Model<MDP::Model>;
+	AIToolbox::POMDP::Model<AIToolbox::MDP::Model> makeChengD35() {
+        using PModel = AIToolbox::POMDP::Model<AIToolbox::MDP::Model>;
         constexpr size_t S = 3, A = 3, O = 3;
 
-        MDP::Model::TransitionMatrix t(A);
-        MDP::Model::RewardMatrix r(S, A);
+        AIToolbox::MDP::Model::TransitionMatrix t(A);
+        AIToolbox::MDP::Model::RewardMatrix r(S, A);
         PModel::ObservationMatrix o(A);
 
         for (size_t a = 0; a < A; ++a) {

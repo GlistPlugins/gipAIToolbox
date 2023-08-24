@@ -19,13 +19,12 @@
 //
 #ifndef ACTION_MATRIX_VECTOR_PRODUCT
 #define ACTION_MATRIX_VECTOR_PRODUCT
+#include "utilities.h"
+#include "STL_interface.hh"
 #include <string>
-
-#include "../generic_bench/init/init_function.hh"
-#include "../generic_bench/init/init_matrix.hh"
-#include "../generic_bench/init/init_vector.hh"
-#include "../generic_bench/utils/utilities.h"
-#include "../libs/STL/STL_interface.hh"
+#include "init/init_function.hh"
+#include "init/init_vector.hh"
+#include "init/init_matrix.hh"
 
 using namespace std;
 

@@ -13,7 +13,7 @@
 
 #include <AIToolbox/Utils/Polytope.hpp>
 
-#include <AIToolbox/Logging.hpp>
+#include <AIToolbox/Impl/Logging.hpp>
 
 namespace AIToolbox::POMDP {
     /**
@@ -119,7 +119,7 @@ namespace AIToolbox::POMDP {
              * @return A tuple containing the maximum variation for the
              *         ValueFunction and the computed ValueFunction.
              */
-            template <IsModel M>
+            template <typename M, typename = std::enable_if_t<is_model_v<M>>>
             std::tuple<double, ValueFunction> operator()(const M & model);
 
         private:
@@ -148,7 +148,7 @@ namespace AIToolbox::POMDP {
             Agenda agenda_;
     };
 
-    template <IsModel M>
+    template <typename M, typename>
     std::tuple<double, ValueFunction> LinearSupport::operator()(const M& model) {
         const auto S = model.getS();
 

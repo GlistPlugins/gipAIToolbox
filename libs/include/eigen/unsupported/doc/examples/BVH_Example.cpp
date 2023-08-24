@@ -1,6 +1,6 @@
+#include <Eigen/StdVector>
+#include <unsupported/Eigen/BVH>
 #include <iostream>
-#include "../../../Eigen/StdVector"
-#include "../../Eigen/BVH"
 
 using namespace Eigen;
 typedef AlignedBox<double, 2> Box2d;

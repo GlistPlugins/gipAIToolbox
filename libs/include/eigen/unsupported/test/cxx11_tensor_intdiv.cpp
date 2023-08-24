@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
 
 
 void test_signed_32bit()
@@ -134,7 +135,7 @@ void test_specific() {
   VERIFY_IS_EQUAL(result, result_op);
 }
 
-void test_cxx11_tensor_intdiv()
+EIGEN_DECLARE_TEST(cxx11_tensor_intdiv)
 {
   CALL_SUBTEST_1(test_signed_32bit());
   CALL_SUBTEST_2(test_unsigned_32bit());

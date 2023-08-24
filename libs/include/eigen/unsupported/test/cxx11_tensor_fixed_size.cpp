@@ -7,8 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include "main.h"
+
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 using Eigen::RowMajor;
@@ -20,7 +21,7 @@ static void test_0d()
   TensorFixedSize<float, Sizes<>, RowMajor> scalar2;
   VERIFY_IS_EQUAL(scalar1.rank(), 0);
   VERIFY_IS_EQUAL(scalar1.size(), 1);
-  VERIFY_IS_EQUAL(array_prod(scalar1.dimensions()), 1);
+  VERIFY_IS_EQUAL(internal::array_prod(scalar1.dimensions()), 1);
 
   scalar1() = 7.0;
   scalar2() = 13.0;
@@ -249,7 +250,7 @@ static void test_array()
   }
 }
 
-void test_cxx11_tensor_fixed_size()
+EIGEN_DECLARE_TEST(cxx11_tensor_fixed_size)
 {
   CALL_SUBTEST(test_0d());
   CALL_SUBTEST(test_1d());

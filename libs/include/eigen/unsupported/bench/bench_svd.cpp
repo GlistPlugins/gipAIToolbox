@@ -13,8 +13,8 @@
 // Bench to compare the efficiency of SVD algorithms
 
 #include <iostream>
+#include <bench/BenchTimer.h>
 #include <unsupported/Eigen/SVD>
-#include "../../bench/BenchTimer.h"
 
 
 using namespace Eigen;
@@ -70,7 +70,7 @@ void bench_svd(const MatrixType& a = MatrixType())
   std::cout<< std::endl;
   timerJacobi.reset();
   timerBDC.reset();
-  cout << " Computes rotaion matrix" <<endl;
+  cout << " Computes rotation matrix" <<endl;
   for (int k=1; k<=NUMBER_SAMPLE; ++k)
   {
     timerBDC.start();

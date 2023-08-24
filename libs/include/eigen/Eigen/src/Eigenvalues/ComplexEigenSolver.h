@@ -12,7 +12,7 @@
 #ifndef EIGEN_COMPLEX_EIGEN_SOLVER_H
 #define EIGEN_COMPLEX_EIGEN_SOLVER_H
 
-#include "ComplexSchur.h"
+#include "./ComplexSchur.h"
 
 namespace Eigen { 
 
@@ -214,7 +214,7 @@ template<typename _MatrixType> class ComplexEigenSolver
 
     /** \brief Reports whether previous computation was successful.
       *
-      * \returns \c Success if computation was succesful, \c NoConvergence otherwise.
+      * \returns \c Success if computation was successful, \c NoConvergence otherwise.
       */
     ComputationInfo info() const
     {

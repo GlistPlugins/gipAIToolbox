@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/MetisSupport"
-#include "../Eigen/SparseLU"
-#include "../unsupported/Eigen/SparseExtra"
 #include "sparse_solver.h"
+#include <Eigen/SparseLU>
+#include <Eigen/MetisSupport>
+#include <unsupported/Eigen/SparseExtra>
 
 template<typename T> void test_metis_T()
 {
@@ -19,7 +19,7 @@ template<typename T> void test_metis_T()
   check_sparse_square_solving(sparselu_metis); 
 }
 
-void test_metis_support()
+EIGEN_DECLARE_TEST(metis_support)
 {
   CALL_SUBTEST_1(test_metis_T<double>());
 }

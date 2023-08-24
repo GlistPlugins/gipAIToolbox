@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include "main.h"
 #include <complex>
 #include <cmath>
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include <Eigen/CXX11/Tensor>
 
 using Eigen::Tensor;
 
@@ -131,7 +131,7 @@ static void test_sub_fft_ifft_invariant(int dim0, int dim1, int dim2, int dim3) 
   }
 }
 
-void test_cxx11_tensor_ifft() {
+EIGEN_DECLARE_TEST(cxx11_tensor_ifft) {
   CALL_SUBTEST(test_1D_fft_ifft_invariant<ColMajor>(4));
   CALL_SUBTEST(test_1D_fft_ifft_invariant<ColMajor>(16));
   CALL_SUBTEST(test_1D_fft_ifft_invariant<ColMajor>(32));

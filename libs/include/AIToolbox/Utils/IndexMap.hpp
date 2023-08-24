@@ -28,7 +28,7 @@ namespace AIToolbox {
              * @brief Basic constructor.
              *
              * @param id An iterator to an index range.
-             * @param items The parent iterable object holding ids and values.
+             * @param parent The parent iterable object holding ids and values.
              */
             IndexMapIterator(IdsIterator id, Container & items) :
                     currentId_(id), items_(&items) {}
@@ -51,7 +51,7 @@ namespace AIToolbox {
             }
             bool operator!=(IndexMapIterator other) const { return !(*this == other); }
 
-            auto& operator++() {
+            auto operator++() {
                 ++currentId_;
                 return *this;
             }
@@ -302,9 +302,7 @@ namespace AIToolbox {
             /**
              * @brief Basic constructor for begin iterators.
              *
-             * @param start The index to start iterating from.
-             * @param ids The container holding the indeces to not iterate.
-             * @param items The container holding the values to iterate.
+             * @param parent The parent iterable object holding ids and values.
              */
             IndexSkipMapIterator(size_type start, const IdsContainer & ids, Container & items) :
                     currentId_(start), currentSkipId_(0), ids_(ids), items_(items)
@@ -324,7 +322,7 @@ namespace AIToolbox {
              */
             auto toContainerId() const { return currentId_; }
 
-            auto& operator++() {
+            auto operator++() {
                 ++currentId_;
                 skip();
                 return *this;

@@ -6,7 +6,7 @@
 
 namespace AIToolbox::Bandit {
     /**
-     * @brief This class implements a softmax policy through a QFunction.
+     * @brief This class models a softmax policy through a QFunction.
      *
      * A softmax policy is a policy that selects actions based on their
      * expected reward: the more advantageous an action seems to be, the more
@@ -23,10 +23,9 @@ namespace AIToolbox::Bandit {
             /**
              * @brief Basic constructor.
              *
-             * @param q The QFunction to act upon.
-             * @param temperature The temperature for the softmax equation.
+             * @param A The size of the action space.
              */
-            QSoftmaxPolicy(const QFunction & q, double temperature = 1.0);
+            QSoftmaxPolicy(const QFunction & q, double t = 1.0);
 
             /**
              * @brief This function chooses an action for state s with probability dependent on value.

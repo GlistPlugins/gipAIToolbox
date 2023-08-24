@@ -22,7 +22,7 @@ inline void on_temporary_creation() {
 #define EIGEN_SPARSE_CREATE_TEMPORARY_PLUGIN { on_temporary_creation(); }
 
 #include "main.h"
-#include "../Eigen/SparseCore"
+#include <Eigen/SparseCore>
 
 #define VERIFY_EVALUATION_COUNT(XPR,N) {\
     nb_temporaries = 0; \
@@ -126,7 +126,7 @@ void call_ref()
   VERIFY_EVALUATION_COUNT( call_ref_5(A.row(2), A.row(2).transpose()),  1);
 }
 
-void test_sparse_ref()
+EIGEN_DECLARE_TEST(sparse_ref)
 {
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST_1( check_const_correctness(SparseMatrix<float>()) );

@@ -8,8 +8,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/SVD"
 #include "main.h"
+#include <Eigen/SVD>
 
 template<typename MatrixType, typename JacobiScalar>
 void jacobi(const MatrixType& m = MatrixType())
@@ -57,7 +57,7 @@ void jacobi(const MatrixType& m = MatrixType())
   }
 }
 
-void test_jacobi()
+EIGEN_DECLARE_TEST(jacobi)
 {
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST_1(( jacobi<Matrix3f, float>() ));

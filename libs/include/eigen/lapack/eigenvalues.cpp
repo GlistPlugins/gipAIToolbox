@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Eigenvalues"
 #include "lapack_common.h"
+#include <Eigen/Eigenvalues>
 
 // computes eigen values and vectors of a general N-by-N matrix A
 EIGEN_LAPACK_FUNC(syev,(char *jobz, char *uplo, int* n, Scalar* a, int *lda, Scalar* w, Scalar* /*work*/, int* lwork, int *info))

@@ -6,7 +6,7 @@
 
 namespace AIToolbox::Bandit {
     /**
-     * @brief This class implements the Linear Reward Penalty algorithm.
+     * @brief This class models the Linear Reward Penalty algorithm.
      *
      * This algorithm performs direct policy updates depending on whether a
      * given action was a success or a penalty.
@@ -104,7 +104,7 @@ namespace AIToolbox::Bandit {
              *
              * The b parameter determines the amount of learning on losing actions.
              *
-             * @param b The new b parameter.
+             * @param a The new b parameter.
              */
             void setBParam(double b);
 

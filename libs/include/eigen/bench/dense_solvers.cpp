@@ -1,11 +1,10 @@
 #include <iostream>
+#include "BenchTimer.h"
+#include <Eigen/Dense>
 #include <map>
 #include <vector>
 #include <string>
 #include <sstream>
-
-#include "../Eigen/Dense"
-#include "BenchTimer.h"
 using namespace Eigen;
 
 std::map<std::string,Array<float,1,8,DontAlign|RowMajor> > results;

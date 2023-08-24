@@ -1,5 +1,5 @@
-#ifndef AI_TOOLBOX_FACTORED_MDP_TIGER_ANTELOPE_HEADER_FILE
-#define AI_TOOLBOX_FACTORED_MDP_TIGER_ANTELOPE_HEADER_FILE
+#ifndef AI_TOOLBOX_FACTORED_MDP_TIGER_ANTELOPE
+#define AI_TOOLBOX_FACTORED_MDP_TIGER_ANTELOPE
 
 #include <AIToolbox/Factored/MDP/CooperativeModel.hpp>
 
@@ -80,6 +80,10 @@ namespace AIToolbox::Factored::MDP {
 
             /**
              * @brief This function returns a graphical representation of a State.
+             *
+             * @param s
+             *
+             * @return 
              */
             std::string printState(const State & s) const;
 

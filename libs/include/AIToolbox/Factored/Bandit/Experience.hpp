@@ -14,7 +14,6 @@ namespace AIToolbox::Factored::Bandit {
     class Experience {
         public:
             using VisitsTable = std::vector<std::vector<unsigned long>>;
-            using Indeces = std::vector<size_t>;
 
             /**
              * @brief Basic constructor.
@@ -27,27 +26,15 @@ namespace AIToolbox::Factored::Bandit {
             /**
              * @brief This function updates the QFunction and counts.
              *
-             * This function additionally returns a reference to the indeces
-             * updated for each group of agents. This is useful, for example,
-             * when updating a model or a policy without needing to recompute
-             * these indeces all the time.
-             *
              * @param a The action taken.
              * @param rews The rewards obtained in the previous timestep, one per agent group.
-             *
-             * @return The indeces of each agent group updated.
              */
-            const Indeces & record(const Action & a, const Rewards & rews);
+            void record(const Action & a, const Rewards & rews);
 
             /**
              * @brief This function resets the QFunction and counts to zero.
              */
             void reset();
-
-            /**
-             * @brief This function returns the local groups of agents.
-             */
-            const std::vector<PartialKeys> & getDependencies() const;
 
             /**
              * @brief This function returns the number of times the record function has been called.
@@ -58,8 +45,6 @@ namespace AIToolbox::Factored::Bandit {
 
             /**
              * @brief This function returns a reference to the internal QFunction.
-             *
-             * The reward matrix contains the current average rewards computed for each action.
              *
              * @return A reference to the internal QFunction.
              */
@@ -92,15 +77,10 @@ namespace AIToolbox::Factored::Bandit {
 
         private:
             Action A;
-            const std::vector<PartialKeys> & deps_;
-
             QFunction qfun_;
             std::vector<Vector> M2s_;
             VisitsTable counts_;
-            Indeces indeces_;
-
             unsigned long timesteps_;
-
     };
 }
 

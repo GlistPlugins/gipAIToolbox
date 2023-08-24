@@ -15,10 +15,10 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-#include "../../actions/basic_actions.hh"
-#include "../../generic_bench/bench.hh"
-#include "../../generic_bench/utils/utilities.h"
+#include "utilities.h"
 #include "eigen3_interface.hh"
+#include "bench.hh"
+#include "basic_actions.hh"
 
 BTL_MAIN;
 

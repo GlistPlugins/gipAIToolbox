@@ -8,8 +8,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Eigenvalues"
 #include "main.h"
+#include <Eigen/Eigenvalues>
 
 template<typename Scalar,int Size> void hessenberg(int size = Size)
 {
@@ -49,7 +49,7 @@ template<typename Scalar,int Size> void hessenberg(int size = Size)
   // TODO: Add tests for packedMatrix() and householderCoefficients()
 }
 
-void test_hessenberg()
+EIGEN_DECLARE_TEST(hessenberg)
 {
   CALL_SUBTEST_1(( hessenberg<std::complex<double>,1>() ));
   CALL_SUBTEST_2(( hessenberg<std::complex<double>,2>() ));

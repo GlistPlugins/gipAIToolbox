@@ -4,7 +4,6 @@
 #include <iosfwd>
 
 #include <AIToolbox/Types.hpp>
-#include <AIToolbox/TypeTraits.hpp>
 #include <AIToolbox/Utils/Core.hpp>
 
 namespace AIToolbox::MDP {
@@ -35,50 +34,33 @@ namespace AIToolbox::MDP {
              * @param S The number of states of the world.
              * @param A The number of actions available to the agent.
              */
-            SparseExperience(size_t S, size_t A);
+            SparseExperience(size_t s, size_t a);
 
             /**
-             * @brief This function sets the internal visits table to the input.
+             * @brief Compatibility setter.
              *
-             * This function takes an arbitrary three dimensional container and
-             * tries to copy its contents into the visits table. It
-             * automatically updates the visitsSum table as well.
+             * This function takes an arbitrary two dimensional container and
+             * tries to copy its contents into the visits table.
              *
              * The container needs to support data access through operator[].
              * In addition, the dimensions of the container must match the ones
-             * specified during the Experience construction (for three
-             * dimensions: S,A,S).
+             * specified during the Experience construction (for two
+             * dimensions: S,A).
              *
              * This is important, as this function DOES NOT perform any size
              * checks on the external containers.
+             *
+             * This function is provided so that it is easy to plug this
+             * library into existing code-bases.
              *
              * @tparam V The external visits container type.
              * @param v The external visits container.
              */
-            template <IsNaive3DTable V>
+            template <typename V>
             void setVisitsTable(const V & v);
 
             /**
-             * @brief This function sets the internal visits table to the input.
-             *
-             * This function copies the input Table3D into the visits table.
-             * It automatically updates the visitsSum table as well.
-             *
-             * The dimensions of the input must match the ones
-             * specified during the Experience construction (for three
-             * dimensions: A, S, S).
-             * BE CAREFUL. The tables MUST be SxS, while the std::vector
-             * containing them MUST be of size A.
-             *
-             * This is important, as this function DOES NOT perform any size
-             * checks on the external containers.
-             *
-             * @param v The external visits container.
-             */
-            void setVisitsTable(const SparseTable3D & v);
-
-            /**
-             * @brief This function sets the internal reward matrix to the input.
+             * @brief Compatibility setter.
              *
              * This function takes an arbitrary two dimensional container and
              * tries to copy its contents into the rewards matrix.
@@ -91,30 +73,17 @@ namespace AIToolbox::MDP {
              * This is important, as this function DOES NOT perform any size
              * checks on the external containers.
              *
+             * This function is provided so that it is easy to plug this
+             * library into existing code-bases.
+             *
              * @tparam R The external rewards container type.
              * @param r The external rewards container.
              */
-            template <IsNaive2DMatrix R>
+            template <typename R>
             void setRewardMatrix(const R & r);
 
             /**
-             * @brief This function sets the internal reward matrix to the input.
-             *
-             * The dimensions of the input must match the ones
-             * specified during the Experience construction (for two
-             * dimensions: S, A).
-             * BE CAREFUL. The tables MUST be SxS, while the std::vector
-             * containing them MUST be of size A.
-             *
-             * This is important, as this function DOES NOT perform any size
-             * checks on the external containers.
-             *
-             * @param r The external rewards container.
-             */
-            void setRewardMatrix(const SparseMatrix2D & r);
-
-            /**
-             * @brief This function sets the internal m2 matrix to the input.
+             * @brief Compatibility setter.
              *
              * This function takes an arbitrary two dimensional container and
              * tries to copy its contents into the M2 matrix.
@@ -127,27 +96,14 @@ namespace AIToolbox::MDP {
              * This is important, as this function DOES NOT perform any size
              * checks on the external containers.
              *
+             * This function is provided so that it is easy to plug this
+             * library into existing code-bases.
+             *
              * @tparam MM The external M2 container type.
-             * @param mm The external M2 container.
+             * @param m The external M2 container.
              */
-            template <IsNaive2DMatrix MM>
+            template <typename MM>
             void setM2Matrix(const MM & mm);
-
-            /**
-             * @brief This function sets the internal m2 matrix to the input.
-             *
-             * The dimensions of the input must match the ones
-             * specified during the Experience construction (for two
-             * dimensions: S, A).
-             * BE CAREFUL. The tables MUST be SxS, while the std::vector
-             * containing them MUST be of size A.
-             *
-             * This is important, as this function DOES NOT perform any size
-             * checks on the external containers.
-             *
-             * @param mm The external M2 container.
-             */
-            void setM2Matrix(const SparseMatrix2D & mm);
 
             /**
              * @brief This function adds a new event to the recordings.
@@ -272,7 +228,7 @@ namespace AIToolbox::MDP {
             friend std::istream& operator>>(std::istream &is, SparseExperience &);
     };
 
-    template <IsNaive3DTable V>
+    template <typename V>
     void SparseExperience::setVisitsTable(const V & v) {
         for ( size_t a = 0; a < A; ++a )
             visits_[a].setZero();
@@ -291,7 +247,7 @@ namespace AIToolbox::MDP {
         visitsSum_.makeCompressed();
     }
 
-    template <IsNaive2DMatrix R>
+    template <typename R>
     void SparseExperience::setRewardMatrix(const R & r) {
         rewards_.setZero();
 
@@ -303,7 +259,7 @@ namespace AIToolbox::MDP {
         rewards_.makeCompressed();
     }
 
-    template <IsNaive2DMatrix MM>
+    template <typename MM>
     void SparseExperience::setM2Matrix(const MM & mm) {
         M2s_.setZero();
 

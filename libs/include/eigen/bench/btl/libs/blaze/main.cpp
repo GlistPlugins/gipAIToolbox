@@ -15,10 +15,10 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
-#include "../../actions/basic_actions.hh"
-#include "../../generic_bench/bench.hh"
-#include "../../generic_bench/utils/utilities.h"
+#include "utilities.h"
 #include "blaze_interface.hh"
+#include "bench.hh"
+#include "basic_actions.hh"
 
 BTL_MAIN;
 
@@ -30,9 +30,9 @@ int main()
 
   bench<Action_matrix_vector_product<blaze_interface<REAL_TYPE> > >(MIN_MV,MAX_MV,NB_POINT);
   bench<Action_atv_product<blaze_interface<REAL_TYPE> > >(MIN_MV,MAX_MV,NB_POINT);
-//   bench<Action_matrix_matrix_product<blaze_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
-//   bench<Action_ata_product<blaze_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
-//   bench<Action_aat_product<blaze_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
+  bench<Action_matrix_matrix_product<blaze_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
+  bench<Action_ata_product<blaze_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
+  bench<Action_aat_product<blaze_interface<REAL_TYPE> > >(MIN_MM,MAX_MM,NB_POINT);
 
   return 0;
 }

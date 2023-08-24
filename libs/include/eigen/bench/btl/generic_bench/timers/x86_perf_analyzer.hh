@@ -20,8 +20,8 @@
 #ifndef _X86_PERF_ANALYSER_HH
 #define _X86_PERF_ANALYSER_HH
 
-#include "../bench_parameter.hh"
 #include "x86_timer.hh"
+#include "bench_parameter.hh"
 
 template<class ACTION>
 class X86_Perf_Analyzer{

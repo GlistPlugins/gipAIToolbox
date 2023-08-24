@@ -9,13 +9,12 @@
 
 #include <iostream>
 
+#include <bench/BenchUtil.h>
 #include <complex>
 #include <vector>
-#include <unsupported/Eigen/FFT>
+#include <Eigen/Core>
 
-#include "../Eigen/Core"
-#include "../unsupported/Eigen/FFT"
-#include "BenchUtil.h"
+#include <unsupported/Eigen/FFT>
 
 using namespace Eigen;
 using namespace std;

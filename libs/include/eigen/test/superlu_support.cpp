@@ -10,9 +10,9 @@
 #define EIGEN_NO_DEBUG_SMALL_PRODUCT_BLOCKS
 #include "sparse_solver.h"
 
-#include "../Eigen/SuperLUSupport"
+#include <Eigen/SuperLUSupport>
 
-void test_superlu_support()
+EIGEN_DECLARE_TEST(superlu_support)
 {
   SuperLU<SparseMatrix<double> > superlu_double_colmajor;
   SuperLU<SparseMatrix<std::complex<double> > > superlu_cplxdouble_colmajor;

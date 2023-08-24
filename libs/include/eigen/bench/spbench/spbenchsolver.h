@@ -10,20 +10,19 @@
 
 #include <iostream>
 #include <fstream>
+#include <Eigen/SparseCore>
+#include <bench/BenchTimer.h>
 #include <cstdlib>
 #include <string>
-#include "spbenchstyle.h"
+#include <Eigen/Cholesky>
+#include <Eigen/Jacobi>
+#include <Eigen/Householder>
+#include <Eigen/IterativeLinearSolvers>
+#include <unsupported/Eigen/IterativeSolvers>
+#include <Eigen/LU>
+#include <unsupported/Eigen/SparseExtra>
+#include <Eigen/SparseLU>
 
-#include "../../Eigen/Cholesky"
-#include "../../Eigen/Householder"
-#include "../../Eigen/IterativeLinearSolvers"
-#include "../../Eigen/Jacobi"
-#include "../../Eigen/LU"
-#include "../../Eigen/SparseCore"
-#include "../../Eigen/SparseLU"
-#include "../../unsupported/Eigen/IterativeSolvers"
-#include "../../unsupported/Eigen/SparseExtra"
-#include "../BenchTimer.h"
 #include "spbenchstyle.h"
 
 #ifdef EIGEN_METIS_SUPPORT
@@ -36,6 +35,10 @@
 
 #ifdef EIGEN_UMFPACK_SUPPORT
 #include <Eigen/UmfPackSupport>
+#endif
+
+#ifdef EIGEN_KLU_SUPPORT
+#include <Eigen/KLUSupport>
 #endif
 
 #ifdef EIGEN_PARDISO_SUPPORT
@@ -52,6 +55,7 @@
 
 // CONSTANTS
 #define EIGEN_UMFPACK  10
+#define EIGEN_KLU  11
 #define EIGEN_SUPERLU  20
 #define EIGEN_PASTIX  30
 #define EIGEN_PARDISO  40
@@ -109,6 +113,12 @@ void printStatheader(std::ofstream& out)
   out << "   <TYPE> LU </TYPE> \n";
   out << "   <PACKAGE> UMFPACK </PACKAGE> \n"; 
   out << "  </SOLVER> \n"; 
+#endif
+#ifdef EIGEN_KLU_SUPPORT
+  out <<"  <SOLVER ID='" << EIGEN_KLU << "'>\n";
+  out << "   <TYPE> LU </TYPE> \n";
+  out << "   <PACKAGE> KLU </PACKAGE> \n";
+  out << "  </SOLVER> \n";
 #endif
 #ifdef EIGEN_SUPERLU_SUPPORT
   out <<"  <SOLVER ID='" << EIGEN_SUPERLU << "'>\n"; 
@@ -315,6 +325,14 @@ void SelectSolvers(const SparseMatrix<Scalar>&A, unsigned int sym, Matrix<Scalar
     cout << "Solving with UMFPACK LU ... \n"; 
     UmfPackLU<SpMat> solver; 
     call_directsolver(solver, EIGEN_UMFPACK, A, b, refX,statFile); 
+  }
+  #endif
+  //KLU
+  #ifdef EIGEN_KLU_SUPPORT
+  {
+    cout << "Solving with KLU LU ... \n";
+    KLU<SpMat> solver;
+    call_directsolver(solver, EIGEN_KLU, A, b, refX,statFile);
   }
   #endif
     //SuperLU

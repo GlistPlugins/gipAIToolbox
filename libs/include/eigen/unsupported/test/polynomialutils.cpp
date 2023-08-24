@@ -7,9 +7,9 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include "main.h"
+#include <unsupported/Eigen/Polynomials>
 #include <iostream>
-#include "../../test/main.h"
-#include "../Eigen/Polynomials"
 
 using namespace std;
 
@@ -101,7 +101,7 @@ template<typename _Scalar> void CauchyBounds_scalar()
           internal::random<int>(18,26) )) );
 }
 
-void test_polynomialutils()
+EIGEN_DECLARE_TEST(polynomialutils)
 {
   for(int i = 0; i < g_repeat; i++)
   {

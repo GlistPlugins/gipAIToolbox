@@ -4,8 +4,8 @@
 #include <algorithm>
 
 #include <AIToolbox/Types.hpp>
-#include <AIToolbox/TypeTraits.hpp>
 #include <AIToolbox/Utils/Core.hpp>
+#include <AIToolbox/Utils/TypeTraits.hpp>
 #include <AIToolbox/Utils/Polytope.hpp>
 
 namespace AIToolbox {
@@ -26,7 +26,7 @@ namespace AIToolbox {
      *
      * @return The iterator that separates dominated elements with non-pruned.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     Iterator extractDominated(Iterator begin, Iterator end, P p = P{}) {
         if ( std::distance(begin, end) < 2 ) return end;
 
@@ -92,7 +92,7 @@ next:;
      *
      * @return Three iterators demarking the various filtered ranges: old, new, dominated old.
      */
-    template <typename Iterator, typename P = std::identity>
+    template <typename Iterator, typename P = identity>
     std::tuple<Iterator, Iterator, Iterator> extractDominatedIncremental(Iterator begin, Iterator newBegin, Iterator end, P p = P{}) {
         // Make sure new entries don't dominate each other. This simplifies the
         // checks and swaps we need to do later.
@@ -182,18 +182,16 @@ next:;
             /**
              * @brief Basic constructor.
              *
-             * @param s The number of dimensions of the simplex to operate on.
+             * @param S The number of dimensions of the simplex to operate on.
              */
             Pruner(const size_t s) : S(s), lp_(S) {}
 
             /**
              * @brief This function prunes all non useful hyperplanes from the provided list.
              *
-             * @param begin An iterator to the start of the list that needs to be pruned.
-             * @param end An iterator to the end of the list that needs to be pruned.
-             * @param p An optional projection to access the hyperplanes from more complex structures.
+             * @param w The list that needs to be pruned.
              */
-            template <typename It, typename P = std::identity>
+            template <typename It, typename P = identity>
             It operator()(It begin, It end, P p = P{});
 
         private:

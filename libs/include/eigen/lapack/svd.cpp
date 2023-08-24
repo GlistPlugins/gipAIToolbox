@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/SVD"
 #include "lapack_common.h"
+#include <Eigen/SVD>
 
 // computes the singular values/vectors a general M-by-N matrix A using divide-and-conquer
 EIGEN_LAPACK_FUNC(gesdd,(char *jobz, int *m, int* n, Scalar* a, int *lda, RealScalar *s, Scalar *u, int *ldu, Scalar *vt, int *ldvt, Scalar* /*work*/, int* lwork,

@@ -14,9 +14,12 @@
 
 #include <stdio.h>
 
-#include "../../Eigen/src/Core/util/DisableStupidWarnings.h"
-#include "../../test/main.h"
-#include "../Eigen/LevenbergMarquardt"
+#include "main.h"
+#include <unsupported/Eigen/LevenbergMarquardt>
+
+// This disables some useless Warnings on MSVC.
+// It is intended to be done for this test only.
+#include <Eigen/src/Core/util/DisableStupidWarnings.h>
 
 using std::sqrt;
 
@@ -1442,7 +1445,7 @@ void testNistEckerle4(void)
   VERIFY_IS_APPROX(x[2], 4.5154121844E+02);
 }
 
-void test_levenberg_marquardt()
+EIGEN_DECLARE_TEST(levenberg_marquardt)
 {
     // Tests using the examples provided by (c)minpack
     CALL_SUBTEST(testLmder1());

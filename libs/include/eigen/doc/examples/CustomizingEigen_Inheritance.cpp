@@ -1,5 +1,5 @@
+#include <Eigen/Core>
 #include <iostream>
-#include "../../Eigen/Core"
 
 class MyVectorType : public Eigen::VectorXd
 {

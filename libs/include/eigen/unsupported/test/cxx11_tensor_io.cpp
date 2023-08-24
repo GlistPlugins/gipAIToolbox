@@ -7,11 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include "main.h"
 #include <sstream>
 #include <string>
-
-#include "../../test/main.h"
-#include "../Eigen/CXX11/Tensor"
+#include <Eigen/CXX11/Tensor>
 
 
 template<int DataLayout>
@@ -120,7 +119,7 @@ static void test_output_const()
 }
 
 
-void test_cxx11_tensor_io()
+EIGEN_DECLARE_TEST(cxx11_tensor_io)
 {
   CALL_SUBTEST(test_output_0d<ColMajor>());
   CALL_SUBTEST(test_output_0d<RowMajor>());

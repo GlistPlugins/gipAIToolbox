@@ -10,10 +10,10 @@
 #ifndef MANDELBROT_H
 #define MANDELBROT_H
 
+#include <Eigen/Core>
 #include <QtGui/QApplication>
 #include <QtGui/QWidget>
 #include <QtCore/QThread>
-#include "../../Eigen/Core"
 
 class MandelbrotWidget;
 

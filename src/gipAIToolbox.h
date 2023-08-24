@@ -8,16 +8,16 @@
 #ifndef SRC_GIPAITOOLBOX_H_
 #define SRC_GIPAITOOLBOX_H_
 
+
 #include "gBaseComponent.h"
-
-#include "AIToolbox/Bandit/Experience.hpp"
-
+#include "aitoolbox.h"
 
 
 class gipAIToolbox : public gBaseComponent{
 public:
 	gipAIToolbox();
 	virtual ~gipAIToolbox();
+
 };
 
 #endif /* SRC_GIPAITOOLBOX_H_ */

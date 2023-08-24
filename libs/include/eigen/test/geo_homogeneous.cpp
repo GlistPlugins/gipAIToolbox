@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../Eigen/Geometry"
 #include "main.h"
+#include <Eigen/Geometry>
 
 template<typename Scalar,int Size> void homogeneous(void)
 {
@@ -115,7 +115,7 @@ template<typename Scalar,int Size> void homogeneous(void)
   VERIFY_IS_APPROX( (t2.template triangularView<Lower>() * v0.homogeneous()).eval(), (t2.template triangularView<Lower>()*hv0) );
 }
 
-void test_geo_homogeneous()
+EIGEN_DECLARE_TEST(geo_homogeneous)
 {
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST_1(( homogeneous<float,1>() ));

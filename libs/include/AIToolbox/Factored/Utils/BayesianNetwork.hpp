@@ -13,7 +13,7 @@ namespace AIToolbox::Factored {
      * over a single time steps. In particular, it contains which
      * state-features and agents each next-state-feature depends on.
      *
-     * This class contains this information, and allows to compute easily
+     * This class constains this information, and allows to compute easily
      * indices to reference outside matrices for data; for example transition
      * probabilities or rewards.
      *
@@ -33,16 +33,16 @@ namespace AIToolbox::Factored {
      *     [2, 5, 4, 2]
      *
      * then I have 4 agents. For each state feature, the DDNGraph has one
-     * DDNGraph::ParentSet, so we have 3 of them. Let's assume that the state
-     * feature 0 depends on agents 0 and 3; then we will have that, in parents 0,
+     * DDNGraph::Node, so we have 3 of them. Let's assume that the state
+     * feature 0 depends on agents 0 and 3; then we will have that, in node 0,
      *
-     *     parents_[0].agents = [0, 3]
+     *     nodes_[0].agents = [0, 3]
      *
      * Now, the space of joint actions for these two agents is 4 (2 * 2). For
      * each one of these, state feature 0 might depend on different sets of
      * state features. So we could have that
      *
-     *    parents_[0].features = [
+     *    nodes_[0].parents = [
      *         [0, 1],     // For joint action value 0,0
      *         [1, 2, 3],  // For joint action value 1,0
      *         [0, 2],     // For joint action value 0,1
@@ -54,20 +54,23 @@ namespace AIToolbox::Factored {
             /**
              * @brief This class contains the parent information for a single next-state feature.
              */
-            struct ParentSet {
+            struct Node {
+                /**
+                 * @brief The
+                 */
                 PartialKeys agents;
-                std::vector<PartialKeys> features;
+                std::vector<PartialKeys> parents;
             };
 
             /**
              * @brief Basic constructor.
              *
-             * Note that in order to be fully initialized, the push(ParentSet)
-             * method must be called once for each state feature.
+             * Note that in order to be fully initialized, the pushNode(Node&&)
+             * method must be called for each state feature.
              *
              * That method is separate to simplify construction and API.
              *
-             * \sa push(ParentSet);
+             * \sa pushNode(Node &&);
              *
              * @param S The state space of the DDN.
              * @param A The action space of the DDN.
@@ -75,7 +78,7 @@ namespace AIToolbox::Factored {
             DynamicDecisionNetworkGraph(State S, Action A);
 
             /**
-             * @brief This function adds a ParentSet to the graph.
+             * @brief This function adds a node to the graph.
              *
              * This method *MUST* be called once per state feature, after
              * construction.
@@ -84,9 +87,23 @@ namespace AIToolbox::Factored {
              * and state features. Additionally, it will pre-compute the size
              * of each set to speed up the computation of ids.
              *
-             * @param parents The ParentSet to insert.
+             * @param node The node to insert.
              */
-            void push(ParentSet parents);
+            void pushNode(Node && node);
+
+            /**
+             * @brief This function adds a node to the graph.
+             *
+             * This method *MUST* be called once per state feature, after
+             * construction.
+             *
+             * This method will sanity check all sets of parents, both agents
+             * and state features. Additionally, it will pre-compute the size
+             * of each set to speed up the computation of ids.
+             *
+             * @param node The node to insert.
+             */
+            void pushNode(const Node & node);
 
             /**
              * @brief This function computes an id for the input state and action, for the specified feature.
@@ -134,11 +151,11 @@ namespace AIToolbox::Factored {
              * This function is provided in case some code still needs to store
              * the "intermediate" ids of the graph.
              *
-             * The actionId, which is the second in the pair, is a number
+             * The actionId, which is the first in the pair, is a number
              * between 0 and the factorSpacePartial of the parent agents of the
              * feature.
              *
-             * The parentId, which is the first in the pair, is a number
+             * The parentId, which is the second in the pair, is a number
              * between 0 and the factorSpacePartial of the state parent
              * features of the feature, given the input action.
              *
@@ -159,11 +176,11 @@ namespace AIToolbox::Factored {
              * This function is provided in case some code still needs to store
              * the "intermediate" ids of the graph.
              *
-             * The actionId, which is the second in the pair, is a number
+             * The actionId, which is the first in the pair, is a number
              * between 0 and the factorSpacePartial of the parent agents of the
              * feature.
              *
-             * The parentId, which is the first in the pair, is a number
+             * The parentId, which is the second in the pair, is a number
              * between 0 and the factorSpacePartial of the state parent
              * features of the feature, given the input action.
              *
@@ -192,7 +209,7 @@ namespace AIToolbox::Factored {
              *
              * @return A pair of <parent id, action id>.
              */
-            std::pair<size_t, size_t> getIds(size_t feature, size_t j) const;
+            std::pair<size_t, size_t> getIds(size_t feature, size_t j);
 
             /**
              * @brief This function returns the size required to store one element per value of a parent set.
@@ -248,16 +265,16 @@ namespace AIToolbox::Factored {
             const Action & getA() const;
 
             /**
-             * @brief This function returns the internal parent sets of the DDNGraph.
+             * @brief This function returns the internal nodes of the DDNGraph.
              *
-             * @return The internal parent sets.
+             * @return The internal nodes.
              */
-            const std::vector<ParentSet> & getParentSets() const;
+            const std::vector<Node> & getNodes() const;
 
         private:
             State S;
             Action A;
-            std::vector<ParentSet> parents_;
+            std::vector<Node> nodes_;
             std::vector<std::vector<size_t>> startIds_;
     };
 

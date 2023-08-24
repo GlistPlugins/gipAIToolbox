@@ -37,11 +37,10 @@
 // DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
-
-#include "../Eigen/Core"
-#include "../Eigen/Eigenvalues"
-#include "../Eigen/Geometry"
-#include "BenchTimer.h"
+#include <Eigen/Core>
+#include <Eigen/Eigenvalues>
+#include <Eigen/Geometry>
+#include <bench/BenchTimer.h>
 
 using namespace Eigen;
 using namespace std;
@@ -102,7 +101,7 @@ void eigen33(const Matrix& mat, Matrix& evecs, Vector& evals)
   computeRoots(scaledMat,evals);
 
   // compute the eigen vectors
-  // **here we assume 3 differents eigenvalues**
+  // **here we assume 3 different eigenvalues**
 
   // "optimized version" which appears to be slower with gcc!
 //     Vector base;

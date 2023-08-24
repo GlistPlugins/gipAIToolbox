@@ -1,7 +1,7 @@
 
+#include <Eigen/Sparse>
+#include <bench/BenchTimer.h>
 #include <set>
-#include "../Eigen/Sparse"
-#include "BenchTimer.h"
 
 using namespace std;
 using namespace Eigen;

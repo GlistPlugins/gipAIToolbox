@@ -35,26 +35,34 @@ namespace AIToolbox::Factored::Bandit {
      * update the returned action if the new overall value is greater than what
      * was selected before.
      *
-     * Note: the way this algoritm is implemented, it assumes that an unique
-     * max always exists. If there are multiple, the algorithm will likely fail
-     * to identify any of them. This can in principle be fixed for graphs
-     * without cycles, but cannot be fixed for graphs with cycles (and indeed
-     * trying to do so can be arbitrarily bad). Thus we simply ignore the
-     * problem, and we require that the graph has a unique max.
      */
     class MaxPlus {
         public:
             using Result = std::tuple<Action, double>;
 
             // Values of factor (in theory N dimensional matrix)
-            using Graph = FactorGraph<Vector>;
+            using Factor = Vector;
+            using Graph = FactorGraph<Factor>;
 
             /**
-             * @brief Basic constructor.
+             * @brief This function finds the best Action-value pair for the provided QFunctionRules.
              *
-             * @param iterations The default number of message passes to perform when solving.
+             * This function automatically sets up the Graph to perform MaxPlus
+             * on from an iterable of QFunctionRules.
+             *
+             * Warning: The returned value is most likely incorrect, and we
+             * only return it for informative purpouses. This is because
+             * MaxPlus needs to internally normalize the values to avoid
+             * divergence, which makes the final computed value incorrect.
+             *
+             * @param A The action space of the agents.
+             * @param rules An iterable object over QFunctionRules.
+             * @param iterations The number of message-passing iterations to perform.
+             *
+             * @return A tuple containing the best Action and its (approximate) value over the input rules.
              */
-            MaxPlus(unsigned iterations = 10);
+            template <typename Iterable>
+            Result operator()(const Action & A, const Iterable & inputRules, size_t iterations = 10);
 
             /**
              * @brief This function performs the actual MaxPlus algorithm.
@@ -63,6 +71,7 @@ namespace AIToolbox::Factored::Bandit {
              * represent the messages sent by agents, and by factors
              * respectively. At the end of each iteration the two are swapped.
              *
+             * At e
              * For each agent, its adjacent factors, and the agents
              * adjacent to those are found. Then all possible action
              * combinations between those other agents are tried in order
@@ -79,24 +88,31 @@ namespace AIToolbox::Factored::Bandit {
              *
              * @param A The action space of the agents.
              * @param graph The graph to perform VE on.
+             * @param iterations The number of message-passing iterations to perform.
              *
              * @return The pair for best Action and its value given the internal graph.
              */
-            Result operator()(const Action & A, const Graph & graph);
-
-            /**
-             * @brief This function returns the currently set number of message passes to perform.
-             */
-            unsigned getIterations() const;
-
-            /**
-             * @brief This function sets the number of message passes to perform.
-             */
-            void setIterations(unsigned iterations);
-
-        private:
-            unsigned iterations_;
+            Result operator()(const Action & A, const Graph & graph, size_t iterations = 10);
     };
+
+    template <typename Iterable>
+    MaxPlus::Result MaxPlus::operator()(const Action & A, const Iterable & inputRules, size_t iterations) {
+        Graph graph(A.size());
+
+        for (const auto & rule : inputRules) {
+            auto & factorData = graph.getFactor(rule.action.first)->getData();
+            const auto id = toIndexPartial(A, rule.action);
+
+            if (factorData.size() == 0) {
+                factorData.resize(factorSpacePartial(rule.action.first, A));
+                factorData.setZero();
+            }
+
+            factorData[id] = rule.value;
+        }
+
+        return (*this)(A, graph, iterations);
+    }
 }
 
 #endif

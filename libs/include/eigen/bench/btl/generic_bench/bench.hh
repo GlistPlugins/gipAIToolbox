@@ -20,16 +20,15 @@
 #ifndef BENCH_HH
 #define BENCH_HH
 
+#include "btl.hh"
+#include "bench_parameter.hh"
 #include <iostream>
+#include "utilities.h"
+#include "size_lin_log.hh"
+#include "xy_file.hh"
 #include <vector>
 #include <string>
-
-#include "bench_parameter.hh"
-#include "btl.hh"
 #include "timers/portable_perf_analyzer.hh"
-#include "utils/size_lin_log.hh"
-#include "utils/utilities.h"
-#include "utils/xy_file.hh"
 // #include "timers/mixed_perf_analyzer.hh"
 // #include "timers/x86_perf_analyzer.hh"
 // #include "timers/STL_perf_analyzer.hh"
@@ -160,7 +159,7 @@ BTL_DONT_INLINE void bench( int size_min, int size_max, int nb_point ){
 //    bench<Mixed_Perf_Analyzer,Action>(size_min,size_max,nb_point);
 
 
-  // Only for small problem size. Otherwize it will be too long
+  // Only for small problem size. Otherwise it will be too long
 //   bench<X86_Perf_Analyzer,Action>(size_min,size_max,nb_point);
 //   bench<STL_Perf_Analyzer,Action>(size_min,size_max,nb_point);
 

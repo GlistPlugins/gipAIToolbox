@@ -40,7 +40,7 @@ namespace AIToolbox::MDP {
              * @param m The MDP that needs to be solved.
              * @return The QFunction of the optimal policy found.
              */
-            template <IsModel M>
+            template <typename M, typename = std::enable_if_t<is_model_v<M>>>
             QFunction operator()(const M & m);
 
             /**
@@ -70,7 +70,7 @@ namespace AIToolbox::MDP {
             double tolerance_;
     };
 
-    template <IsModel M>
+    template <typename M, typename>
     QFunction PolicyIteration::operator()(const M & m) {
         const auto S = m.getS();
         const auto A = m.getA();

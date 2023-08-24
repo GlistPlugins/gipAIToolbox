@@ -1,7 +1,7 @@
 #ifndef AI_TOOLBOX_MDP_SPARSE_MODEL_HEADER_FILE
 #define AI_TOOLBOX_MDP_SPARSE_MODEL_HEADER_FILE
 
-#include <AIToolbox/Seeder.hpp>
+#include <AIToolbox/Impl/Seeder.hpp>
 
 #include <AIToolbox/MDP/Types.hpp>
 #include <AIToolbox/MDP/TypeTraits.hpp>
@@ -136,7 +136,7 @@ namespace AIToolbox::MDP {
              * @param r The external rewards container.
              * @param d The discount factor for the MDP.
              */
-            template <IsNaive3DMatrix T, IsNaive3DMatrix R>
+            template <typename T, typename R>
             SparseModel(size_t s, size_t a, const T & t, const R & r, double d = 1.0);
 
             /**
@@ -151,7 +151,7 @@ namespace AIToolbox::MDP {
              * @tparam M The type of the other model.
              * @param model The model that needs to be copied.
              */
-            template <IsModel M>
+            template <typename M, typename = std::enable_if_t<is_model_v<M>>>
             SparseModel(const M& model);
 
             /**
@@ -182,7 +182,7 @@ namespace AIToolbox::MDP {
              * The container needs to support data access through
              * operator[]. In addition, the dimensions of the container
              * must match the ones provided as arguments (for three
-             * dimensions: S, A, S).
+             * dimensions: S,A,S).
              *
              * This is important, as this function DOES NOT perform any
              * size checks on the external container.
@@ -201,19 +201,19 @@ namespace AIToolbox::MDP {
              * @tparam T The external transition container type.
              * @param t The external transitions container.
              */
-            template <IsNaive3DMatrix T>
+            template <typename T>
             void setTransitionFunction(const T & t);
 
             /**
-             * @brief This function sets the transition function using a SparseMatrix3D.
+             * @brief This function sets the transition function using a Eigen sparse matrices.
              *
              * This function will throw a std::invalid_argument if the
              * matrix provided does not contain valid probabilities.
              *
-             * The dimensions of the container must match the ones used during
-             * construction (for three dimensions: A, S, S).
-             * BE CAREFUL. The sparse matrices MUST be SxS, while the
-             * std::vector containing them MUST have size A.
+             * The dimensions of the container must match the ones provided
+             * as arguments (for three dimensions: S, S, A). BE CAREFUL.
+             * The sparse matrices MUST be SxS, while the std::vector
+             * containing them MUST represent A.
              *
              * This function does DOES NOT perform any size checks on the
              * input.
@@ -247,15 +247,14 @@ namespace AIToolbox::MDP {
              * @tparam R The external rewards container type.
              * @param r The external rewards container.
              */
-            template <IsNaive3DMatrix R>
+            template <typename R>
             void setRewardFunction(const R & r);
 
             /**
              * @brief This function replaces the reward function with the one provided.
              *
-             * The dimensions of the container must match the ones used during
-             * construction (for two dimensions: S, A).
-             * BE CAREFUL.
+             * The dimensions of the container must match the ones provided
+             * as arguments (for two dimensions: S, A). BE CAREFUL.
              *
              * This function does DOES NOT perform any size checks on the
              * input.
@@ -374,22 +373,24 @@ namespace AIToolbox::MDP {
             RewardMatrix rewards_;
 
             mutable RandomEngine rand_;
+
+            friend std::istream& operator>>(std::istream &is, SparseModel &);
     };
 
-    template <IsNaive3DMatrix T, IsNaive3DMatrix R>
+    template <typename T, typename R>
     SparseModel::SparseModel(const size_t s, const size_t a, const T & t, const R & r, const double d) :
             S(s), A(a), transitions_(A, SparseMatrix2D(S, S)),
-            rewards_(S, A), rand_(Seeder::getSeed())
+            rewards_(S, A), rand_(Impl::Seeder::getSeed())
     {
         setDiscount(d);
         setTransitionFunction(t);
         setRewardFunction(r);
     }
 
-    template <IsModel M>
+    template <typename M, typename>
     SparseModel::SparseModel(const M& model) :
             S(model.getS()), A(model.getA()), transitions_(A, SparseMatrix2D(S, S)),
-            rewards_(S, A), rand_(Seeder::getSeed())
+            rewards_(S, A), rand_(Impl::Seeder::getSeed())
     {
         setDiscount(model.getDiscount());
         for ( size_t s = 0; s < S; ++s )
@@ -412,10 +413,13 @@ namespace AIToolbox::MDP {
         rewards_.makeCompressed();
     }
 
-    template <IsNaive3DMatrix T>
+    template <typename T>
     void SparseModel::setTransitionFunction(const T & t) {
-        if (!isProbability(S, A, S, t))
-            throw std::invalid_argument("Input transition matrix does not contain valid probabilities.");
+        // First we verify data, without modifying anything...
+        for ( size_t s = 0; s < S; ++s )
+            for ( size_t a = 0; a < A; ++a )
+                if ( !isProbability(S, t[s][a]) )
+                    throw std::invalid_argument("Input transition matrix does not contain valid probabilities.");
 
         // Then we copy.
         for ( size_t a = 0; a < A; ++a ) {
@@ -430,17 +434,15 @@ namespace AIToolbox::MDP {
         }
     }
 
-    template <IsNaive3DMatrix R>
-    void SparseModel::setRewardFunction(const R & r) {
+    template <typename R>
+    void SparseModel::setRewardFunction( const R & r ) {
         rewards_.setZero();
         for ( size_t a = 0; a < A; ++a ) {
-            for ( size_t s = 0; s < S; ++s ) {
-                double newRew = 0.0;
-                for ( size_t s1 = 0; s1 < S; ++s1 )
-                    newRew += r[s][a][s1] * transitions_[a].coeff(s, s1);
-
-                if (checkDifferentSmall(newRew, 0.0))
-                    rewards_.coeffRef(s, a) = newRew;
+            for ( size_t s = 0; s < S; ++s )
+            for ( size_t s1 = 0; s1 < S; ++s1 ) {
+                const double w = r[s][a][s1];
+                const double p = transitions_[a].coeff(s, s1);
+                if ( checkDifferentSmall(0.0, w) && checkDifferentSmall(0.0, p) ) rewards_.coeffRef(s, a) += w * p;
             }
         }
         rewards_.makeCompressed();

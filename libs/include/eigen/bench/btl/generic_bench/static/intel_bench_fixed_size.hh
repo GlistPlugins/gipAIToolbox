@@ -20,7 +20,7 @@
 #ifndef _BENCH_FIXED_SIZE_HH_
 #define _BENCH_FIXED_SIZE_HH_
 
-#include "../utils/utilities.h"
+#include "utilities.h"
 #include "function_time.hh"
 
 template <class Action>

@@ -7,8 +7,8 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include "../../test/main.h"
-#include "../Eigen/MatrixFunctions"
+#include "main.h"
+#include <unsupported/Eigen/MatrixFunctions>
 
 // For complex matrices, any matrix is fine.
 template<typename MatrixType, int IsComplex = NumTraits<typename internal::traits<MatrixType>::Scalar>::IsComplex>

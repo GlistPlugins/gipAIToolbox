@@ -10,9 +10,8 @@
 #ifndef EIGEN_CAMERA_H
 #define EIGEN_CAMERA_H
 
+#include <Eigen/Geometry>
 #include <QObject>
-
-#include "../../Eigen/Geometry"
 // #include <frame.h>
 
 class Frame

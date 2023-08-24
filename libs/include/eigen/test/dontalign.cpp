@@ -14,7 +14,7 @@
 #endif
 
 #include "main.h"
-#include "../Eigen/Dense"
+#include <Eigen/Dense>
 
 template<typename MatrixType>
 void dontalign(const MatrixType& m)
@@ -44,7 +44,7 @@ void dontalign(const MatrixType& m)
   internal::aligned_delete(array, rows);
 }
 
-void test_dontalign()
+EIGEN_DECLARE_TEST(dontalign)
 {
 #if defined EIGEN_TEST_PART_1 || defined EIGEN_TEST_PART_5
   dontalign(Matrix3d());

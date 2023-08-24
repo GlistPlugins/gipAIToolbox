@@ -3,7 +3,7 @@
 
 #include <random>
 
-#include <AIToolbox/Seeder.hpp>
+#include <AIToolbox/Impl/Seeder.hpp>
 #include <AIToolbox/Utils/Core.hpp>
 #include <AIToolbox/Utils/Probability.hpp>
 #include <AIToolbox/MDP/Types.hpp>
@@ -12,11 +12,11 @@
 #include <AIToolbox/POMDP/TypeTraits.hpp>
 
 namespace AIToolbox::POMDP {
-    template <MDP::IsModel M>
+    template <typename M>
     class SparseModel;
 
     // Declaration to warn the compiler that this is a template function
-    template <MDP::IsModel M>
+    template <typename M, typename = std::enable_if_t<MDP::is_model_v<M>>>
     std::istream& operator>>(std::istream &is, SparseModel<M> & m);
 
     /**
@@ -74,8 +74,10 @@ namespace AIToolbox::POMDP {
      *
      * @tparam M The particular MDP type that we want to extend.
      */
-    template <MDP::IsModel M>
+    template <typename M>
     class SparseModel : public M {
+        static_assert(MDP::is_model_v<M>, "This class only works for MDP models!");
+
         public:
             using ObservationMatrix = SparseMatrix3D;
 
@@ -120,7 +122,7 @@ namespace AIToolbox::POMDP {
              * @param parameters All arguments needed to build the parent Model.
              */
             // Check that ObFun is a triple-matrix, otherwise we'll call the other constructor!
-            template <IsNaive3DMatrix ObFun, typename... Args>
+            template <typename ObFun, typename... Args, typename = std::enable_if_t<std::is_constructible_v<double,decltype(std::declval<ObFun>()[0][0][0])>>>
             SparseModel(size_t o, ObFun && of, Args&&... parameters);
 
             /**
@@ -132,14 +134,13 @@ namespace AIToolbox::POMDP {
              * course such a solution can be done only when the number of states,
              * actions and observations is not too big.
              *
-             * Of course this constructor is available only if the underlying
-             * MDP Model can to be constructed from the input as well.
+             * Of course this constructor is available only if the underlying Model
+             * allows to be constructed too.
              *
              * @tparam PM The type of the other model.
              * @param model The model that needs to be copied.
              */
-            template <typename PM>
-            requires IsModel<PM> && std::constructible_from<M, PM>
+            template <typename PM, typename = std::enable_if_t<is_model_v<PM> && std::is_constructible_v<M,PM>>>
             SparseModel(const PM& model);
 
             /**
@@ -166,7 +167,7 @@ namespace AIToolbox::POMDP {
              * The container needs to support data access through
              * operator[]. In addition, the dimensions of the
              * containers must match the ones provided as arguments
-             * (for three dimensions: S, A, O, in this order).
+             * (for three dimensions: s,a,o, in this order).
              *
              * This is important, as this function DOES NOT perform
              * any size checks on the external containers.
@@ -177,26 +178,8 @@ namespace AIToolbox::POMDP {
              * @tparam ObFun The external observations container type.
              * @param of The external observations container.
              */
-            template <IsNaive3DMatrix ObFun>
+            template <typename ObFun>
             void setObservationFunction(const ObFun & of);
-
-            /**
-             * @brief This function sets the observation function using a SparseMatrix3D.
-             *
-             * This function will throw a std::invalid_argument if the
-             * matrix provided does not contain valid probabilities.
-             *
-             * The dimensions of the container must match the ones used during
-             * construction (for three dimensions: A, S, O).
-             * BE CAREFUL. The matrices MUST be SxO, while the std::vector
-             * containing them MUST be of size A.
-             *
-             * This function does DOES NOT perform any size checks on the
-             * input.
-             *
-             * @param of The external observations container.
-             */
-            void setObservationFunction(const ObservationMatrix & of);
 
             /**
              * @brief This function samples the POMDP for the specified state action pair.
@@ -288,13 +271,15 @@ namespace AIToolbox::POMDP {
             // We need this because we don't know if our parent already has one,
             // and we wouldn't know how to access it!
             mutable RandomEngine rand_;
+
+            friend std::istream& operator>> <M>(std::istream &is, SparseModel<M> &);
     };
 
-    template <MDP::IsModel M>
+    template <typename M>
     template <typename... Args>
     SparseModel<M>::SparseModel(const size_t o, Args&&... params) :
             M(std::forward<Args>(params)...), O(o), observations_(this->getA(),
-            SparseMatrix2D(this->getS(), O)), rand_(Seeder::getSeed())
+            SparseMatrix2D(this->getS(), O)), rand_(Impl::Seeder::getSeed())
     {
         for ( size_t a = 0; a < this->getA(); ++a ) {
             for ( size_t s1 = 0; s1 < this->getS(); ++s1 )
@@ -303,28 +288,27 @@ namespace AIToolbox::POMDP {
         }
     }
 
-    template <MDP::IsModel M>
-    template <IsNaive3DMatrix ObFun, typename... Args>
+    template <typename M>
+    template <typename ObFun, typename... Args, typename>
     SparseModel<M>::SparseModel(const size_t o, ObFun && of, Args&&... params) :
             M(std::forward<Args>(params)...), O(o),
-            observations_(this->getA(), SparseMatrix2D(this->getS(), O)), rand_(Seeder::getSeed())
+            observations_(this->getA(), SparseMatrix2D(this->getS(), O)), rand_(Impl::Seeder::getSeed())
     {
         setObservationFunction(of);
     }
 
-    template <MDP::IsModel M>
+    template <typename M>
     template <typename... Args>
     SparseModel<M>::SparseModel(NoCheck, size_t o, ObservationMatrix && ot, Args&&... params) :
             M(std::forward<Args>(params)...), O(o),
             observations_(std::move(ot))
     {}
 
-    template <MDP::IsModel M>
-    template <typename PM>
-    requires IsModel<PM> && std::constructible_from<M, PM>
+    template <typename M>
+    template <typename PM, typename>
     SparseModel<M>::SparseModel(const PM& model) :
             M(model), O(model.getO()), observations_(this->getA(), SparseMatrix2D(this->getS(), O)),
-            rand_(Seeder::getSeed())
+            rand_(Impl::Seeder::getSeed())
     {
         for ( size_t a = 0; a < this->getA(); ++a ) {
             for ( size_t s1 = 0; s1 < this->getS(); ++s1 ) {
@@ -342,64 +326,53 @@ namespace AIToolbox::POMDP {
         }
     }
 
-    template <MDP::IsModel M>
-    template <IsNaive3DMatrix ObFun>
+    template <typename M>
+    template <typename ObFun>
     void SparseModel<M>::setObservationFunction(const ObFun & of) {
         for ( size_t s1 = 0; s1 < this->getS(); ++s1 )
             for ( size_t a = 0; a < this->getA(); ++a )
                 if ( !isProbability(O, of[s1][a]) )
                     throw std::invalid_argument("Input observation matrix does not contain valid probabilities.");
 
-        for ( size_t a = 0; a < this->getA(); ++a ) {
-            observations_[a].setZero();
-            for ( size_t s1 = 0; s1 < this->getS(); ++s1 )
-            for ( size_t o = 0; o < O; ++o ) {
-                const double p = of[s1][a][o];
-                if ( checkDifferentSmall( p, 0.0 ) )
-                    observations_[a].insert(s1, o) = p;
-            }
-        }
+        for ( size_t s1 = 0; s1 < this->getS(); ++s1 )
+            for ( size_t a = 0; a < this->getA(); ++a )
+                for ( size_t o = 0; o < O; ++o ) {
+                    const double p = of[s1][a][o];
+                    if ( checkDifferentSmall( p, 0.0 ) ) observations_[a].insert(s1, o) = p;
+                }
 
         for ( size_t a = 0; a < this->getA(); ++a )
             observations_[a].makeCompressed();
     }
 
-    template <MDP::IsModel M>
-    void SparseModel<M>::setObservationFunction(const SparseMatrix3D & of) {
-        if (!isProbability(of))
-            throw std::invalid_argument("Input observation matrix does not contain valid probabilities.");
-        // Then we copy.
-        observations_ = of;
-    }
-
-    template <MDP::IsModel M>
+    template <typename M>
     double SparseModel<M>::getObservationProbability(const size_t s1, const size_t a, const size_t o) const {
         return observations_[a].coeff(s1, o);
     }
 
-    template <MDP::IsModel M>
+    template <typename M>
     const SparseMatrix2D & SparseModel<M>::getObservationFunction(const size_t a) const {
         return observations_[a];
     }
 
-    template <MDP::IsModel M>
+    template <typename M>
     size_t SparseModel<M>::getO() const {
         return O;
     }
 
-    template <MDP::IsModel M>
+    template <typename M>
     const typename SparseModel<M>::ObservationMatrix & SparseModel<M>::getObservationFunction() const {
         return observations_;
     }
 
-    template <MDP::IsModel M>
+    template <typename M>
     std::tuple<size_t,size_t, double> SparseModel<M>::sampleSOR(const size_t s, const size_t a) const {
         const auto [s1, r] = this->sampleSR(s, a);
         const auto o = sampleProbability(O, observations_[a].row(s1), rand_);
         return std::make_tuple(s1, o, r);
     }
 
-    template <MDP::IsModel M>
+    template <typename M>
     std::tuple<size_t, double> SparseModel<M>::sampleOR(const size_t s, const size_t a, const size_t s1) const {
         const size_t o = sampleProbability(O, observations_[a].row(s1), rand_);
         const double r = this->getExpectedReward(s, a, s1);

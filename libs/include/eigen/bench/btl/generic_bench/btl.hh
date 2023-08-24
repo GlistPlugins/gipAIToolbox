@@ -19,13 +19,12 @@
 #ifndef BTL_HH
 #define BTL_HH
 
+#include "bench_parameter.hh"
 #include <iostream>
 #include <algorithm>
 #include <vector>
 #include <string>
-
-#include "bench_parameter.hh"
-#include "utils/utilities.h"
+#include "utilities.h"
 
 #if (defined __GNUC__)
 #define BTL_ALWAYS_INLINE __attribute__((always_inline)) inline

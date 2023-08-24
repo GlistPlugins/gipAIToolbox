@@ -7,10 +7,10 @@
 // Public License v. 2.0. If a copy of the MPL was not distributed
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include <array>
+#include "main.h"
 
-#include "../../test/main.h"
-#include "../Eigen/CXX11/src/util/CXX11Meta.h"
+#include <array>
+#include <Eigen/CXX11/src/util/CXX11Meta.h>
 
 using Eigen::internal::is_same;
 using Eigen::internal::type_list;
@@ -340,7 +340,7 @@ static void test_array_misc()
   VERIFY_IS_EQUAL((instantiate_by_c_array<dummy_inst, int, 5>(data).c), 5);
 }
 
-void test_cxx11_meta()
+EIGEN_DECLARE_TEST(cxx11_meta)
 {
   CALL_SUBTEST(test_gen_numeric_list());
   CALL_SUBTEST(test_concat());

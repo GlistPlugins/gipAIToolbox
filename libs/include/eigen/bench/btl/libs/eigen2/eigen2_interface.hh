@@ -18,13 +18,12 @@
 #ifndef EIGEN2_INTERFACE_HH
 #define EIGEN2_INTERFACE_HH
 // #include <cblas.h>
+#include <Eigen/Core>
+#include <Eigen/Cholesky>
+#include <Eigen/LU>
+#include <Eigen/QR>
 #include <vector>
-
-#include "../../../../Eigen/Cholesky"
-#include "../../../../Eigen/Core"
-#include "../../../../Eigen/LU"
-#include "../../../../Eigen/QR"
-#include "../../generic_bench/btl.hh"
+#include "btl.hh"
 
 using namespace Eigen;
 

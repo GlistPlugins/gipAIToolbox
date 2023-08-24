@@ -1,9 +1,7 @@
 
-#include "basicbenchmark.h"
-
 #include <iostream>
-
 #include "BenchUtil.h"
+#include "basicbenchmark.h"
 
 int main(int argc, char *argv[])
 {

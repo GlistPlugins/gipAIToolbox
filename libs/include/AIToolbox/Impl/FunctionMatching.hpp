@@ -2,8 +2,7 @@
 #define AI_TOOLBOX_IMPL_FUNCTION_MATCHIN_HEADER_FILE
 
 #include <tuple>
-
-#include <AIToolbox/TypeTraits.hpp>
+#include <AIToolbox/Utils/TypeTraits.hpp>
 
 namespace AIToolbox::Impl {
     /**
@@ -95,7 +94,7 @@ namespace AIToolbox::Impl {
     struct Matcher<N, std::tuple<FA, A...>, std::tuple<FB, B...>, IDs...> {
         using M = std::conditional_t<
                     std::is_constructible_v<FA, FB> &&
-                    std::is_same_v<std::remove_cvref_t<FA>, std::remove_cvref_t<FB>>,
+                    std::is_same_v<remove_cv_ref_t<FA>, remove_cv_ref_t<FB>>,
                     Matcher<N+1, std::tuple<A...>, std::tuple<B...>, IDs..., N>,
                     Matcher<N+1, std::tuple<FA, A...>, std::tuple<B...>, IDs...>
                 >;
@@ -133,10 +132,9 @@ namespace AIToolbox::Impl {
     /**
      * @brief This function calls the input function with the subset of correct parameters from the input tuple.
      *
-     * The nameless IdPack parameter contains the indeces of the arguments to pass to the function.
-     *
      * @param f The function to call.
      * @param args All arguments.
+     * @param IdPack The type containing the indeces of the arguments to pass to the function.
      */
     template <typename F, typename... Args, size_t... IDs>
     void caller(F f, std::tuple<Args...> && args, IdPack<IDs...>) {

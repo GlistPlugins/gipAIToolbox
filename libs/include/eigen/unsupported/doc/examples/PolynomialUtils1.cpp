@@ -1,5 +1,5 @@
+#include <unsupported/Eigen/Polynomials>
 #include <iostream>
-#include "../../Eigen/Polynomials"
 
 using namespace Eigen;
 using namespace std;

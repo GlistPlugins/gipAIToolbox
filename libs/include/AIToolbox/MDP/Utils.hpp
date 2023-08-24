@@ -69,13 +69,13 @@ namespace AIToolbox::MDP {
      *
      * Note that this function is more efficient with eigen models.
      *
-     * @param model The MDP that needs to be solved.
+     * @param m The MDP that needs to be solved.
      *
      * @return The Models's immediate rewards.
      */
-    template <IsModel M>
+    template <typename M, std::enable_if_t<is_model_v<M>, int> = 0>
     Matrix2D computeImmediateRewards(const M & model) {
-        if constexpr(IsModelEigen<M>) {
+        if constexpr(is_model_eigen_v<M>) {
             return model.getRewardFunction();
         } else {
             const auto S = model.getS();
@@ -102,11 +102,11 @@ namespace AIToolbox::MDP {
      *
      * @return A new QFunction.
      */
-    template <IsModel M>
+    template <typename M, std::enable_if_t<is_model_v<M>, int> = 0>
     QFunction computeQFunction(const M & model, const Values & v, QFunction ir) {
         const auto A = model.getA();
 
-        if constexpr(IsModelEigen<M>) {
+        if constexpr(is_model_eigen_v<M>) {
             for ( size_t a = 0; a < A; ++a )
                 ir.col(a).noalias() += model.getTransitionFunction(a) * v;
         } else {
