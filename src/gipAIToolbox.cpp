@@ -14,4 +14,9 @@ gipAIToolbox::gipAIToolbox() {
 gipAIToolbox::~gipAIToolbox() {
 }
 
+gipAIToolbox::Model gipAIToolbox::makeCornerProblem(const GridWorld &grid,double stepUncertainty) {
+}
 
+gipAIToolbox::Model* gipAIToolbox::getModel() {
+	return model;
+}
